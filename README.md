@@ -56,12 +56,63 @@ _A definir cuando se cree el proyecto._ Propuesta inicial:
 
 ```
 .
-├── README.md
-├── docs/            # diagramas UML y documentación de diseño
-└── src/
-    ├── main/   # código de dominio
-    |   ├──      
-    └── test/   # tests de unidad
+C:.
+│   pom.xml
+│   README.md
+│
+├───.mvn
+└───src
+    ├───main
+    │   ├───java
+    │   │   └───com
+    │   │       └───pepito
+    │   │           └───reservas
+    │   │               │   Main.java
+    │   │               │
+    │   │               ├───catalogo
+    │   │               │   │   Catalogo.java
+    │   │               │   │   ItemCatalogo.java
+    │   │               │   │
+    │   │               │   └───busqueda
+    │   │               │           CriterioBusqueda.java
+    │   │               │
+    │   │               ├───cliente
+    │   │               │       Cliente.java
+    │   │               │
+    │   │               ├───notificador
+    │   │               ├───procesadorpago
+    │   │               ├───reporte
+    │   │               ├───reserva
+    │   │               │   │   GestorReservas.java
+    │   │               │   │   Reserva.java
+    │   │               │   │   VoucherCredito.java
+    │   │               │   │
+    │   │               │   ├───estado
+    │   │               │   │       Cancelada.java
+    │   │               │   │       CheckIn.java
+    │   │               │   │       Confirmada.java
+    │   │               │   │       EnCurso.java
+    │   │               │   │       EstadoReserva.java
+    │   │               │   │       Finalizada.java
+    │   │               │   │       MetodoInvalidoException.java
+    │   │               │   │       NombreEstado.java
+    │   │               │   │       SolicitudPendiente.java
+    │   │               │   │
+    │   │               │   └───suscriptor
+    │   │               │           ReservaObserver.java
+    │   │               │
+    │   │               ├───servicio
+    │   │               │       GestorServicios.java
+    │   │               │       Paquete.java
+    │   │               │       Servicio.java
+    │   │               │       Validador.java
+    │   │               │
+    │   │               └───traslado
+    │   │                       MetodoTraslado.java
+    │   │
+    │   └───resources
+    └───test
+        └───java
 ```
 
 ## Tecnologías
