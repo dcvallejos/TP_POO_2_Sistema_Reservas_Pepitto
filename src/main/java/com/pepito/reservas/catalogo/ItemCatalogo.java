@@ -10,5 +10,7 @@ public interface ItemCatalogo extends Validador {
 
     @Override
     public Boolean validate();
+    
+    double getPrecioFinal();
 
 }
