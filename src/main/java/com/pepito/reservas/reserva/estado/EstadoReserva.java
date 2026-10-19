@@ -1,6 +1,6 @@
 package com.pepito.reservas.reserva.estado;
 
-import com.pepito.reservas.catalogo.ItemCatalogo;
+import com.pepito.reservas.catalogo.Validador;
 import com.pepito.reservas.reserva.GestorReservas;
 
 public abstract class EstadoReserva implements GestorReservas {
@@ -8,12 +8,12 @@ public abstract class EstadoReserva implements GestorReservas {
     NombreEstado nombre;
 
     @Override
-    public void agregarServicio(ItemCatalogo item) {
+    public void agregarServicio(Validador item) {
         this.rechazar("Agregar Servicio");
     }
 
     @Override
-    public void quitarServicio(ItemCatalogo item) {
+    public void quitarServicio(Validador item) {
         this.rechazar("Quitar Servicio");
 
     }

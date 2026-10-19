@@ -4,7 +4,7 @@ import com.pepito.reservas.reserva.estado.EstadoReserva;
 import com.pepito.reservas.reserva.estado.MetodoInvalidoException;
 import com.pepito.reservas.reserva.suscriptor.ReservaObserver;
 import com.pepito.reservas.servicio.GestorServicios;
-import com.pepito.reservas.catalogo.ItemCatalogo;
+import com.pepito.reservas.catalogo.Validador;
 import com.pepito.reservas.cliente.Cliente;
 import com.pepito.reservas.traslado.MetodoTraslado;
 
@@ -13,7 +13,7 @@ import java.util.List;
 public class Reserva implements GestorServicios, GestorReservas {
 
     Cliente cliente;
-    List<ItemCatalogo> items;
+    List<Validador> items;
     EstadoReserva estado;
     MetodoTraslado metodoTraslado;
     List<VoucherCredito> vouchers;
@@ -22,22 +22,22 @@ public class Reserva implements GestorServicios, GestorReservas {
     public Reserva(){}
 
     @Override
-    public void agregarItem(ItemCatalogo item) {
+    public void agregarItem(Validador item) {
 
     }
 
     @Override
-    public void removerItem(ItemCatalogo item) {
+    public void removerItem(Validador item) {
 
     }
 
     @Override
-    public void agregarServicio(ItemCatalogo item) {
+    public void agregarServicio(Validador item) {
 
     }
 
     @Override
-    public void quitarServicio(ItemCatalogo item) {
+    public void quitarServicio(Validador item) {
 
     }
 

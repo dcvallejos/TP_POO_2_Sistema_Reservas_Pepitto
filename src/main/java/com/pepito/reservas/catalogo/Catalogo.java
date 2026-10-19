@@ -8,23 +8,23 @@ import java.util.List;
 
 public class Catalogo implements GestorServicios {
 
-    List<ItemCatalogo> items;
+    List<Validador> items;
 
     public Catalogo(){
-        this.items = new ArrayList<ItemCatalogo>();
+        this.items = new ArrayList<Validador>();
     }
 
     @Override
-    public void agregarItem(ItemCatalogo item){
+    public void agregarItem(Validador item){
 
     }
 
     @Override
-    public void removerItem(ItemCatalogo item){
+    public void removerItem(Validador item){
 
     }
 
-    public List<ItemCatalogo> buscar(CriterioBusqueda criterio){
+    public List<Validador> buscar(CriterioBusqueda criterio){
         return new ArrayList<>(List.of()); // Placeholder para que no chille
     }
 
