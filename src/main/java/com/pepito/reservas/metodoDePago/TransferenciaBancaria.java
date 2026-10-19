@@ -1,0 +1,34 @@
+package com.pepito.reservas.metodoDePago;
+
+public class TransferenciaBancaria extends MetodoDePago{
+    private ApiTransferencia apiTrasnferencia;
+    private int cbu;
+    private String alias;
+
+    public TransferenciaBancaria(ApiTransferencia apiTransferencia , int cbu ,String alias  ){
+        this.apiTrasnferencia=apiTransferencia;
+        this.cbu=cbu;
+        this.alias=alias;
+    }
+
+
+    @Override
+    public void validarDatos() {
+        apiTrasnferencia.validar(cbu ,alias  );
+    }
+
+    @Override
+    public void reservarFondos() {
+            apiTrasnferencia.reservar();
+    }
+
+    @Override
+    public void ejecutarTransaccion() {
+            apiTrasnferencia.ejecutar();
+    }
+
+    @Override
+    public void notificarResultado() {
+            apiTrasnferencia.notificar();
+    }
+}
