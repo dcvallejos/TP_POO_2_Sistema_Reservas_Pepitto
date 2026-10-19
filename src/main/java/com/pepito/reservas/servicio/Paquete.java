@@ -1,11 +1,12 @@
 package com.pepito.reservas.servicio;
 
 import com.pepito.reservas.catalogo.ItemCatalogo;
+import com.pepito.reservas.excepciones.ServiceExceptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Paquete implements ItemCatalogo {
+public class Paquete implements ItemCatalogo, GestorServicios {
 
     String nombre;
     String descripcion;
@@ -18,6 +19,10 @@ public class Paquete implements ItemCatalogo {
             String descripcion,
             Double precioBase,
             Double descuento) {
+
+        if (precioBase < 0.0){throw new ServiceExceptions.ErrorCreacionPaquete(nombre, "PrecioBase no puede ser negativo");}
+        if (descuento < 0.0 || descuento > 1.0 ){throw new ServiceExceptions.ErrorCreacionPaquete(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");}
+
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precioBase = precioBase;
@@ -55,23 +60,27 @@ public class Paquete implements ItemCatalogo {
         return servicios.stream().allMatch(ItemCatalogo::validate);
     }
 
-    public void agregarItem(ItemCatalogo item) throws Exception {
+    @Override
+    public void agregarItem(ItemCatalogo item) throws ServiceExceptions {
 
         if(item.validate()){
             this.servicios.add(item);
         }
         else{
-            throw new Exception("No se encuentra correctamente inicializado el servicio. Verifique que los atributos esten completos, y sus tipos declarados sean los correspondientes");
+            throw new ServiceExceptions.MetodoInvalido("Agregar Servicio", "No se pudo agregar el " + item.getClass().getName()) ;
         }
 
     }
 
+    @Override
+    public void removerItem(ItemCatalogo item) {
+        this.servicios.remove(item);
+    }
+
+    @Override
     public Integer cantidadItems(){
         return servicios.size();
     }
 
-    public void eliminarItem(ItemCatalogo item){
 
-        this.servicios.remove(item);
-    }
 }

@@ -1,11 +1,13 @@
 package com.pepito.reservas.servicio;
 
+import com.pepito.reservas.catalogo.ItemCatalogo;
 import com.pepito.reservas.catalogo.Validador;
 
 public interface GestorServicios {
 
-    public void agregarItem(Validador item);
+    void agregarItem(ItemCatalogo item);
 
-    public void removerItem(Validador item);
+    void removerItem(ItemCatalogo item);
 
+    Integer cantidadItems();
 }
