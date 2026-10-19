@@ -19,7 +19,7 @@ public class TransferenciaBancaria extends MetodoDePago{
 
     @Override
     public void reservarFondos() {
-            apiTrasnferencia.reservar();
+
     }
 
     @Override
