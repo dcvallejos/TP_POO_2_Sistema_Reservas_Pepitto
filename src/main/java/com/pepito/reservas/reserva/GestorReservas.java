@@ -1,25 +1,19 @@
 package com.pepito.reservas.reserva;
- 
+
 import com.pepito.reservas.catalogo.ItemCatalogo;
- 
-/*
- * Operaciones que se le pueden pedir a una Reserva.
- * Es el contrato del Contexto (Reserva); NO es el contrato de los estados, que reciben la Reserva como parámetro (en EstadoReserva).
- */
+import com.pepito.reservas.reserva.estado.MetodoInvalidoException;
 
 public interface GestorReservas {
- 
-    void agregarItem(ItemCatalogo item);
- 
-    void quitarItem(ItemCatalogo item);
- 
+
+    void agregarServicio(ItemCatalogo item);
+    void quitarServicio(ItemCatalogo item);
+
     void confirmar();
- 
-    void hacerCheckIn();
- 
-    void iniciarViaje();
- 
-    void finalizar();
- 
+    void checkIn();
+    void ejecutar();   // pasa a EN_CURSO
+    void checkOut(); // pasa a FINALIZADO
     void cancelar();
+
+    void rechazar(String message) throws MetodoInvalidoException;
+
 }
