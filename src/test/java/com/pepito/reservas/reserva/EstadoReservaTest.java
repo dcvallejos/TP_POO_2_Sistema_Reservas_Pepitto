@@ -1,4 +1,4 @@
-package com.pepito.reservas.reserva.estado;
+package com.pepito.reservas.reserva;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -17,7 +17,7 @@ class EstadoReservaTest {
     };
 
     private void verificarRechazo(String operacion, Executable accion) {
-        MetodoInvalidoException ex = assertThrows(MetodoInvalidoException.class, accion);
+        OperacionInvalidaException ex = assertThrows(OperacionInvalidaException.class, accion);
         assertEquals("FINALIZADA", ex.getEstado());
         assertEquals(operacion, ex.getOperacion());
     }
@@ -33,8 +33,13 @@ class EstadoReservaTest {
     }
 
     @Test
+    void elegirTrasladoSeRechazaPorDefecto() {
+        verificarRechazo("elegir traslado", () -> estado.elegirTraslado(null, null));
+    }
+
+    @Test
     void confirmarSeRechazaPorDefecto() {
-        verificarRechazo("confirmar", () -> estado.confirmar(null));
+        verificarRechazo("confirmar", () -> estado.confirmar(null, null));
     }
 
     @Test

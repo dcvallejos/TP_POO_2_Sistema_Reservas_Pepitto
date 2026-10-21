@@ -1,24 +1,22 @@
-package com.pepito.reservas.reserva.estado;
-
-import com.pepito.reservas.reserva.Reserva;
+package com.pepito.reservas.reserva;
 
 /*
  * El cliente hizo el check-in previo. Si cancela: se libera el Cupo y se reembolsan Servicios y Tasas.
  */
 
-public class EnCheckIn extends EstadoReserva {
+class EnCheckIn extends EstadoReserva {
 	 
-    public EnCheckIn() {
+    EnCheckIn() {
         super(NombreEstado.EN_CHECKIN);
     }
  
     @Override
-    public void iniciarViaje(Reserva reserva) {
+    void iniciarViaje(Reserva reserva) {
         reserva.cambiarEstado(new EnCurso());
     }
  
     @Override
-    public void cancelar(Reserva reserva) {
+    void cancelar(Reserva reserva) {
         reserva.liberarCupos();
         reserva.generarVoucherReembolsoTotal();
         reserva.cambiarEstado(new Cancelada());

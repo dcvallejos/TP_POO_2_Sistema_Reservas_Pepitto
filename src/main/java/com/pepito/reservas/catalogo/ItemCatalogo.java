@@ -6,11 +6,11 @@ public interface ItemCatalogo extends Validador {
 
     public Double precioBase();
     public Double descuento();
-    public Double preciFinal();
+    public Double precioFinal();
+    void bloquear(int cantidad);
+    void liberar(int cantidad);
 
     @Override
     public Boolean validate();
-    
-    double getPrecioFinal();
 
 }

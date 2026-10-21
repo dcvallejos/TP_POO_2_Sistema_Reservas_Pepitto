@@ -1,19 +1,23 @@
 package com.pepito.reservas.reserva;
  
 import com.pepito.reservas.catalogo.ItemCatalogo;
+import com.pepito.reservas.metodoDePago.MetodoDePago;
+import com.pepito.reservas.traslado.MetodoTraslado;
  
 /*
  * Operaciones que se le pueden pedir a una Reserva.
  * Es el contrato del Contexto (Reserva); NO es el contrato de los estados, que reciben la Reserva como parámetro (en EstadoReserva).
  */
 
-public interface GestorReservas {
+public interface OperacionesReserva {
  
     void agregarItem(ItemCatalogo item);
  
     void quitarItem(ItemCatalogo item);
  
-    void confirmar();
+    void elegirTraslado(MetodoTraslado metodoTraslado);
+ 
+    void confirmar(MetodoDePago metodoPago);
  
     void hacerCheckIn();
  
