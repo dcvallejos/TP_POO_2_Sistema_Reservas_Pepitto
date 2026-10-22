@@ -1,5 +1,6 @@
 package com.pepito.reservas.reserva;
 
+import com.pepito.reservas.catalogo.ItemCatalogo;
 import com.pepito.reservas.reserva.estado.EstadoReserva;
 import com.pepito.reservas.reserva.estado.MetodoInvalidoException;
 import com.pepito.reservas.reserva.suscriptor.ReservaObserver;
@@ -22,13 +23,18 @@ public class Reserva implements GestorServicios, GestorReservas {
     public Reserva(){}
 
     @Override
-    public void agregarItem(Validador item) {
+    public void agregarItem(ItemCatalogo item) {
 
     }
 
     @Override
-    public void removerItem(Validador item) {
+    public void removerItem(ItemCatalogo item) {
 
+    }
+
+    @Override
+    public Integer cantidadItems() {
+        return 0;
     }
 
     @Override
