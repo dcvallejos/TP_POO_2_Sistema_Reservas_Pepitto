@@ -1,6 +1,5 @@
 package com.pepito.reservas.excepciones;
 
-import com.pepito.reservas.servicio.Servicio;
 
 public abstract class ServiceExceptions extends RuntimeException {
     protected ServiceExceptions(String message) {
@@ -32,3 +31,4 @@ public abstract class ServiceExceptions extends RuntimeException {
     }
 
 }
+
