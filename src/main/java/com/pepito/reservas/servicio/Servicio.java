@@ -4,36 +4,60 @@ import com.pepito.reservas.catalogo.ItemCatalogo;
 import com.pepito.reservas.excepciones.ServiceExceptions;
 import com.pepito.reservas.servicio.atributos.AtributoDinamico;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class Servicio implements ItemCatalogo {
-
+public class Servicio extends ItemCatalogo {
     String codigoReserva;
-    String nombre;
     String proveedor;
     Categoria categoria;
     Double precioBase;
-    Double descuento;
+
     List<AtributoDinamico> atributosAdicionales;
 
+    public Disponibilidad getDisponibilidad() {
+        return disponibilidad;
+    }
+
     public Servicio(
-            String codigoReserva,
             String nombre,
+            Double descuento,
+            String codigoReserva,
             String proveedor,
             Categoria categoria,
             Double precioBase,
-            Double descuento) throws ServiceExceptions {
+            Disponibilidad disponibilidad,
+            List<AtributoDinamico> atributosAdicionales) {
         // Validación de reglas de creación
-        if (precioBase < 0.0){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "PrecioBase no puede ser negativo");}
-        if (descuento < 0.0 || descuento > 1.0 ){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");}
 
+        super(nombre, descuento, disponibilidad);
         this.codigoReserva = codigoReserva;
-        this.nombre = nombre;
         this.proveedor = proveedor;
         this.categoria = categoria;
         this.precioBase = precioBase;
-        this.descuento = descuento;
+        this.atributosAdicionales = atributosAdicionales = new ArrayList<>(List.of());
+    }
+
+    public Servicio(
+            String nombre,
+            Double descuento,
+            Disponibilidad disponibilidad,
+            String codigoReserva,
+            String proveedor,
+            Categoria categoria,
+            Double precioBase
+        )
+    {
+        if (precioBase < 0.0){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "PrecioBase no puede ser negativo");}
+        if (descuento < 0.0 || descuento > 1.0 ){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");}
+
+        super(nombre, descuento, disponibilidad);
+        this.codigoReserva = codigoReserva;
+        this.proveedor = proveedor;
+        this.categoria = categoria;
+        this.precioBase = precioBase;
         this.atributosAdicionales = new ArrayList<>(List.of());
     }
 
@@ -44,7 +68,7 @@ public class Servicio implements ItemCatalogo {
 
     @Override
     public Double descuento() {
-        return 1 - descuento;
+        return 1 - this.descuento;
     }
 
     @Override
