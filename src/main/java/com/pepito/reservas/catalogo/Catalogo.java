@@ -15,13 +15,18 @@ public class Catalogo implements GestorServicios {
     }
 
     @Override
-    public void agregarItem(Validador item){
+    public void agregarItem(ItemCatalogo item){
 
     }
 
     @Override
-    public void removerItem(Validador item){
+    public void removerItem(ItemCatalogo item){
 
+    }
+
+    @Override
+    public Integer cantidadItems() {
+        return 0;
     }
 
     public List<Validador> buscar(CriterioBusqueda criterio){
