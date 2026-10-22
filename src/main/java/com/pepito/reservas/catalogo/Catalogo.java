@@ -11,7 +11,7 @@ public class Catalogo implements GestorServicios {
     List<Validador> items;
 
     public Catalogo(){
-        this.items = new ArrayList<Validador>();
+        this.items = new ArrayList<>();
     }
 
     @Override
