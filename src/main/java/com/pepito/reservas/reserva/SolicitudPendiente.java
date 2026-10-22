@@ -1,4 +1,4 @@
-package com.pepito.reservas.reserva.estado;
+package com.pepito.reservas.reserva;
 
 public class SolicitudPendiente extends EstadoReserva{
 }
