@@ -3,33 +3,31 @@ package com.pepito.reservas.servicio;
 import com.pepito.reservas.catalogo.ItemCatalogo;
 import com.pepito.reservas.excepciones.ServiceExceptions;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Paquete implements ItemCatalogo, GestorServicios {
+public class Paquete extends ItemCatalogo implements GestorServicios {
 
-    String nombre;
     String descripcion;
     Double precioBase;
-    Double descuento;
     List<ItemCatalogo> servicios;
 
     public Paquete(
             String nombre,
+            Double descuento,
             String descripcion,
-            Double precioBase,
-            Double descuento) {
-
+            Double precioBase
+        )
+    {
         if (precioBase < 0.0){throw new ServiceExceptions.ErrorCreacionPaquete(nombre, "PrecioBase no puede ser negativo");}
         if (descuento < 0.0 || descuento > 1.0 ){throw new ServiceExceptions.ErrorCreacionPaquete(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");}
 
-        this.nombre = nombre;
+        super(nombre, descuento);
         this.descripcion = descripcion;
         this.precioBase = precioBase;
-        this.descuento = descuento;
-        this.servicios = new ArrayList<>(List.of());
+        this.servicios = new ArrayList<>(List.of());;
     }
-
 
     @Override
     public Double precioBase() {
@@ -44,6 +42,16 @@ public class Paquete implements ItemCatalogo, GestorServicios {
     @Override
     public Double precioFinal() {
         return this.precioBase() * this.descuento();
+    }
+
+    @Override
+    public Boolean disponible(LocalDate fecha, Integer cantidad) {
+        return null;
+    }
+
+    @Override
+    public void reservar(LocalDate fecha, Integer cantidad) {
+
     }
 
     @Override
