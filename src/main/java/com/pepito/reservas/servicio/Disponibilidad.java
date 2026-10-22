@@ -4,7 +4,6 @@ import com.pepito.reservas.excepciones.DisponibilidadException;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.stream.Stream;
 
 public class Disponibilidad {
 
@@ -86,6 +85,7 @@ public class Disponibilidad {
                 ).allMatch(localDate -> fechaDisponible(localDate, cantidad));
         // Se obtiene un bool resultante de verificar que todas las fechas obtenidas tengan cupo
     }
+
 
     public Boolean fechaDisponible(LocalDate fecha, Integer cantidad){
         Integer cupoActual = cupo(fecha);
