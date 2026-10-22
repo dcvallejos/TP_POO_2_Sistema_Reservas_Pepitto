@@ -1,6 +1,7 @@
 package com.pepito.reservas.servicio;
 
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 public class Periodo {
 
@@ -19,6 +20,10 @@ public class Periodo {
 
     public LocalDate fechaHasta() {
         return fechaHasta;
+    }
+
+    public Stream<LocalDate> getSetPeriodo(Periodo fechas) {
+        return fechas.fechaDesde.datesUntil(fechas.fechaHasta().plusDays(1));
     }
 
 

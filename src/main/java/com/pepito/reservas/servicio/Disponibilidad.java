@@ -19,15 +19,11 @@ public class Disponibilidad {
         this.disponibilidad = new HashMap<>();
     }
 
-    private static Stream<LocalDate> getSetPeriodo(Periodo fechas) {
-        return fechas.fechaDesde.datesUntil(fechas.fechaHasta().plusDays(1));
-    }
-
 
     public void agregarCupoMasivo(Periodo fechas, Integer cupo){
         // Agrega un cupo determinado durante un período, agregándose el mismo todos los días
         // desde inicio a fin.
-        getSetPeriodo(fechas).forEach(fecha -> agregarCupo(fecha, cupo));
+        fechas.getSetPeriodo(fechas).forEach(fecha -> agregarCupo(fecha, cupo));
     }
 
     public void agregarCupo(LocalDate fecha, Integer cupos){
@@ -49,7 +45,7 @@ public class Disponibilidad {
 
     public void liberarPeriodo(Periodo fechas, Integer cantidad){
         try {
-            getSetPeriodo(fechas).forEach(fecha -> liberarFecha(fecha, cantidad));
+            fechas.getSetPeriodo(fechas).forEach(fecha -> liberarFecha(fecha, cantidad));
         }
         catch (Exception e) {
             throw new DisponibilidadException.PeriodoSinDisponibilidad(fechas);
@@ -60,7 +56,7 @@ public class Disponibilidad {
     public void bloquearPeriodo(Periodo fechas, Integer cantidad){
 
         if(periodoDisponible(fechas, cantidad)){
-            getSetPeriodo(fechas)
+            fechas.getSetPeriodo(fechas)
                     .forEach(fecha -> bloquearFecha(fecha,cantidad));
 
         }
