@@ -285,12 +285,11 @@ class ServicioTest {
         Servicio servicio = new Servicio(
                 "Vuelo a Aruba",
                 0.1,
+                new Disponibilidad(),
                 "123VUELO",
                 "QATAR AIRWAYS",
                 Categoria.VUELO,
-                123.0,
-                new Disponibilidad(),
-                new ArrayList<>()
+                123.0
         );
 
         assertEquals(123.0, servicio.precioBase(), DELTA);

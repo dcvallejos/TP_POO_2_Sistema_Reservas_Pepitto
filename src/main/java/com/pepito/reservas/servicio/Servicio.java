@@ -6,39 +6,18 @@ import com.pepito.reservas.servicio.atributos.AtributoDinamico;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class Servicio extends ItemCatalogo {
     String codigoReserva;
     String proveedor;
     Categoria categoria;
     Double precioBase;
+    Disponibilidad disponibilidad;
+
 
     List<AtributoDinamico> atributosAdicionales;
-
-    public Disponibilidad getDisponibilidad() {
-        return disponibilidad;
-    }
-
-    public Servicio(
-            String nombre,
-            Double descuento,
-            String codigoReserva,
-            String proveedor,
-            Categoria categoria,
-            Double precioBase,
-            Disponibilidad disponibilidad,
-            List<AtributoDinamico> atributosAdicionales) {
-        // Validación de reglas de creación
-
-        super(nombre, descuento, disponibilidad);
-        this.codigoReserva = codigoReserva;
-        this.proveedor = proveedor;
-        this.categoria = categoria;
-        this.precioBase = precioBase;
-        this.atributosAdicionales = atributosAdicionales = new ArrayList<>(List.of());
-    }
 
     public Servicio(
             String nombre,
@@ -53,12 +32,32 @@ public class Servicio extends ItemCatalogo {
         if (precioBase < 0.0){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "PrecioBase no puede ser negativo");}
         if (descuento < 0.0 || descuento > 1.0 ){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");}
 
-        super(nombre, descuento, disponibilidad);
+        super(nombre, descuento);
         this.codigoReserva = codigoReserva;
+        this.disponibilidad = disponibilidad;
         this.proveedor = proveedor;
         this.categoria = categoria;
         this.precioBase = precioBase;
         this.atributosAdicionales = new ArrayList<>(List.of());
+    }
+
+    public Disponibilidad getDisponibilidad() {
+        return disponibilidad;
+    }
+
+    public Boolean disponible(Periodo fechas, Integer cantidad) {
+        return disponibilidad.periodoDisponible(fechas, cantidad);
+    }
+    @Override
+    public Boolean disponible(LocalDate fecha, Integer cantidad) {
+        return disponibilidad.fechaDisponible(fecha, cantidad);
+    }
+    public void reservar(Periodo fechas, Integer cantidad) {
+        disponibilidad.bloquearPeriodo(fechas, cantidad);
+    }
+    @Override
+    public void reservar(LocalDate fecha, Integer cantidad) {
+        disponibilidad.bloquearFecha(fecha, cantidad);
     }
 
     @Override
@@ -105,4 +104,5 @@ public class Servicio extends ItemCatalogo {
 
         return atributosAdicionales.stream().allMatch(AtributoDinamico::validate);
     }
+
 }
