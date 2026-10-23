@@ -1,5 +1,7 @@
 package com.pepito.reservas.metodoDePago;
 
+import com.pepito.reservas.reserva.Reserva;
+
 public class BilleteraVirtual  extends MetodoDePago{
     private ApiBilletera apiBilletera;
 
@@ -24,7 +26,7 @@ public class BilleteraVirtual  extends MetodoDePago{
     }
 
     @Override
-    public void notificarResultado() {
+    public void notificarResultado(Reserva reserva) {
         apiBilletera.notificar();
     }
 }
