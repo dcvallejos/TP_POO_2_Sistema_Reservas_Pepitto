@@ -1,5 +1,7 @@
 package com.pepito.reservas.metodoDePago;
 
+import com.pepito.reservas.reserva.Reserva;
+
 import java.time.LocalDate;
 
 public class TarjetaDeCreditoInternacional  extends MetodoDePago{
@@ -7,6 +9,7 @@ public class TarjetaDeCreditoInternacional  extends MetodoDePago{
     private int nroTarjeta ;
     private int cvv;
     private LocalDate fechaDeVencimiento;
+
 
     public TarjetaDeCreditoInternacional(int nroTarjeta ,int cvv , LocalDate fechaDeVencimiento ,ApiTarjetaDeCredito apiTarjetaDeCredito) {
         this.apiTarjetaDeCredito= apiTarjetaDeCredito;
@@ -32,7 +35,9 @@ public class TarjetaDeCreditoInternacional  extends MetodoDePago{
     }
 
     @Override
-    public void notificarResultado() {
-        apiTarjetaDeCredito.notificar();
+    public void notificarResultado(Reserva reserva) {
+        Voucher voucherImpreso= new Voucher  (cvv );
+        reserva.agregarAListaDeComprobantes(voucherImpreso);
     }
+
 }
