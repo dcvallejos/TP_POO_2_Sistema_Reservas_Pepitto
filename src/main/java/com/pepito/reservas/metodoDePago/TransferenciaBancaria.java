@@ -32,5 +32,6 @@ public class TransferenciaBancaria extends MetodoDePago{
     @Override
     public void notificarResultado(Reserva reserva) {
             Comprobante comprobanteDeOperacion = new Comprobante (alias,cbu  );
+            reserva.agregarALaListaDeComprobantes(comprobanteDeOperacion);
     }
 }
