@@ -21,7 +21,7 @@ public class TransferenciaBancaria extends MetodoDePago{
 
     @Override
     public void reservarFondos() {
-
+        // no aplica
     }
 
     @Override
