@@ -1,5 +1,7 @@
 package com.pepito.reservas.metodoDePago;
 
+import com.pepito.reservas.reserva.Reserva;
+
 public class TransferenciaBancaria extends MetodoDePago{
     private ApiTransferencia apiTrasnferencia;
     private int cbu;
@@ -28,7 +30,7 @@ public class TransferenciaBancaria extends MetodoDePago{
     }
 
     @Override
-    public void notificarResultado() {
-            apiTrasnferencia.notificar();
+    public void notificarResultado(Reserva reserva) {
+            Comprobante comprobanteDeOperacion = new Comprobante (alias,cbu  );
     }
 }
