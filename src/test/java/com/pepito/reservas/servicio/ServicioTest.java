@@ -1,8 +1,15 @@
 package com.pepito.reservas.servicio;
 
+import com.pepito.reservas.catalogo.servicio.Categoria;
+import com.pepito.reservas.catalogo.servicio.Disponibilidad;
+import com.pepito.reservas.catalogo.servicio.Periodo;
+import com.pepito.reservas.catalogo.servicio.Servicio;
+import com.pepito.reservas.catalogo.servicio.atributos.*;
 import com.pepito.reservas.excepciones.DisponibilidadException;
 import com.pepito.reservas.excepciones.ServiceExceptions;
-import com.pepito.reservas.servicio.atributos.*;
+import com.pepito.reservas.destino.Ciudad;
+import com.pepito.reservas.destino.Destino;
+import com.pepito.reservas.destino.TipoGeografico;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,10 +24,38 @@ class ServicioTest {
     Servicio servicio_alojamiento;
     Servicio servicio_excursion;
     Servicio servicio_auto;
+    Destino europa;
+    Destino italia;
+    Destino francia;
+    Ciudad roma;
+    Ciudad lyon;
+    Ciudad paris;
+
+    // Unico lugar donde se crean los objetos: si cambia un constructor, se toca aca.
+    private Destino continente(String nombre) {return new Destino(TipoGeografico.CONTINENTE, nombre);}
+    private Destino pais(String nombre) {return new Destino(TipoGeografico.PAIS, nombre);}
+    private Ciudad ciudad(String nombre) {return new Ciudad(TipoGeografico.CIUDAD, nombre);}
 
     Double DELTA = 0.0001;
     @BeforeEach
     void setUp() {
+
+        roma = ciudad("Roma");
+        lyon = ciudad("Lyon");
+        paris = ciudad("Paris");
+
+        italia = pais("Italia");
+        francia = pais("Francia");
+        europa = continente("Europa");
+
+        europa.agregarDestino(italia);
+        europa.agregarDestino(francia);
+
+        italia.agregarDestino(roma);
+        francia.agregarDestino(lyon);
+        francia.agregarDestino(paris);
+
+
         servicio_vuelo = new Servicio(
                 "Vuelo a Aruba",
                 0.1,
@@ -28,7 +63,7 @@ class ServicioTest {
                 "123VUELO",
                 "QATAR AIRWAYS",
                 Categoria.VUELO,
-                123.0
+                123.0, europa
         );
 
         servicio_alojamiento = new Servicio(
@@ -38,7 +73,7 @@ class ServicioTest {
                 "123HOTEL",
                 "AIRBNB",
                 Categoria.ALOJAMIENTO,
-                32.5
+                32.5, paris
         );
 
         servicio_vuelo_2 = new Servicio(
@@ -48,7 +83,7 @@ class ServicioTest {
                 "234VUELO",
                 "QATAR MINI-AIRWAYS",
                 Categoria.VUELO,
-                50.34
+                50.34, paris
         );
 
         servicio_auto = new Servicio(
@@ -58,7 +93,7 @@ class ServicioTest {
                 "123AUTO",
                 "CAMEL TIRE",
                 Categoria.ALQUILER_AUTO,
-                12.2
+                12.2, paris
         );
 
         servicio_excursion = new Servicio(
@@ -68,7 +103,7 @@ class ServicioTest {
                 "123TEMPLO",
                 "WISE GUY TRAVEL AGENCY",
                 Categoria.EXCURSION,
-                5.6
+                5.6, paris
         );
 
     }
@@ -103,7 +138,7 @@ class ServicioTest {
                 "321TEMPLO",
                 "UNWISE GUY TRAVEL AGENCY",
                 Categoria.EXCURSION,
-                0.0
+                0.0, paris
         );
 
         assertFalse(servicio_excursion_invalid.validate());
@@ -119,7 +154,7 @@ class ServicioTest {
                 "",
                 "UNWISE GUY TRAVEL AGENCY",
                 Categoria.EXCURSION,
-                1.0
+                1.0, paris
         );
 
         assertFalse(servicio_excursion_invalid.validate());
@@ -135,7 +170,7 @@ class ServicioTest {
                 "TEST",
                 "UNWISE GUY TRAVEL AGENCY",
                 Categoria.EXCURSION,
-                1.0
+                1.0, paris
         );
 
         assertFalse(servicio_excursion_invalid.validate());
@@ -151,7 +186,7 @@ class ServicioTest {
                 "TEST",
                 "",
                 Categoria.EXCURSION,
-                1.0
+                1.0, paris
         );
 
         assertFalse(servicio_excursion_invalid.validate());
@@ -168,7 +203,7 @@ class ServicioTest {
                     "321TEMPLO",
                     "UNWISE GUY TRAVEL AGENCY",
                     Categoria.EXCURSION,
-                    -100.0
+                    -100.0, paris
             );
         });
     }
@@ -183,7 +218,7 @@ class ServicioTest {
                     "321TEMPLO",
                     "UNWISE GUY TRAVEL AGENCY",
                     Categoria.EXCURSION,
-                    100.0
+                    100.0, paris
             );
         });
     }
@@ -265,15 +300,15 @@ class ServicioTest {
                     "321TEMPLO",
                     "UNWISE GUY TRAVEL AGENCY",
                     Categoria.EXCURSION,
-                    100.0
+                    100.0, paris
             );
         });
     }
 
     @Test
     void servicio_acepta_descuentos_limite_0_y_1() {
-        Servicio sinDescuento = new Servicio("Test", 0.0, new Disponibilidad(), "T1", "PROV", Categoria.EXCURSION, 10.0);
-        Servicio descuentoTotal = new Servicio("Test", 1.0, new Disponibilidad(), "T2", "PROV", Categoria.EXCURSION, 10.0);
+        Servicio sinDescuento = new Servicio("Test", 0.0, new Disponibilidad(), "T1", "PROV", Categoria.EXCURSION, 10.0, paris);
+        Servicio descuentoTotal = new Servicio("Test", 1.0, new Disponibilidad(), "T2", "PROV", Categoria.EXCURSION, 10.0, paris);
 
         assertEquals(10.0, sinDescuento.precioFinal(), DELTA);
         assertEquals(0.0, descuentoTotal.precioFinal(), DELTA);
@@ -288,12 +323,14 @@ class ServicioTest {
                 "123VUELO",
                 "QATAR AIRWAYS",
                 Categoria.VUELO,
-                123.0
+                123.0, paris
         );
 
         assertEquals(123.0, servicio.precioBase(), DELTA);
         assertEquals(110.7, servicio.precioFinal(), DELTA);
     }
+
+    // Inicializacion de Periodos
 
 
     @Test
@@ -420,5 +457,43 @@ class ServicioTest {
         assertEquals(0,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
         assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta.minusDays(1)));
 
+    }
+
+    Periodo periodoFebrero = new Periodo(LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 5));
+    LocalDate dia = LocalDate.of(2026, 2, 2);
+
+    @Test
+    void servicio_disponible_por_fecha_respeta_el_cupo() {
+        servicio_vuelo.disponibilidad().agregarCupo(dia, 10);
+
+        assertTrue(servicio_vuelo.disponible(dia, 10));
+        assertFalse(servicio_vuelo.disponible(dia, 11));
+    }
+
+    @Test
+    void servicio_disponible_por_periodo_respeta_el_cupo() {
+        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodoFebrero, 10);
+
+        assertTrue(servicio_vuelo.disponible(periodoFebrero, 10));
+        assertFalse(servicio_vuelo.disponible(periodoFebrero, 11));
+    }
+
+    @Test
+    void servicio_reservar_fecha_descuenta_cupo() {
+        servicio_vuelo.disponibilidad().agregarCupo(dia, 10);
+
+        servicio_vuelo.reservar(dia, 4);
+
+        assertEquals(6, servicio_vuelo.disponibilidad().cupo(dia));
+    }
+
+    @Test
+    void servicio_reservar_periodo_descuenta_cupo_de_cada_dia() {
+        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodoFebrero, 10);
+
+        servicio_vuelo.reservar(periodoFebrero, 4);
+
+        assertEquals(6, servicio_vuelo.disponibilidad().cupo(LocalDate.of(2026, 2, 1)));
+        assertEquals(6, servicio_vuelo.disponibilidad().cupo(LocalDate.of(2026, 2, 5)));
     }
 }
