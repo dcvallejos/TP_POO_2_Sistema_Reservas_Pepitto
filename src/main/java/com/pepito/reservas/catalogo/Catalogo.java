@@ -1,8 +1,8 @@
 package com.pepito.reservas.catalogo;
 
 import com.pepito.reservas.catalogo.busqueda.CriterioBusqueda;
-import com.pepito.reservas.servicio.GestorServicios;
-import com.pepito.reservas.servicio.Periodo;
+import com.pepito.reservas.catalogo.servicio.GestorServicios;
+import com.pepito.reservas.catalogo.servicio.Periodo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

@@ -1,12 +1,15 @@
 package com.pepito.reservas.catalogo;
 
 import com.pepito.reservas.catalogo.busqueda.CriterioBusqueda;
-import com.pepito.reservas.servicio.Categoria;
-import com.pepito.reservas.servicio.Disponibilidad;
-import com.pepito.reservas.servicio.Periodo;
-import com.pepito.reservas.servicio.Servicio;
-import com.pepito.reservas.servicio.atributos.AtributoDinamico;
-import com.pepito.reservas.servicio.atributos.TipoBooleano;
+import com.pepito.reservas.catalogo.servicio.Categoria;
+import com.pepito.reservas.catalogo.servicio.Disponibilidad;
+import com.pepito.reservas.catalogo.servicio.Periodo;
+import com.pepito.reservas.catalogo.servicio.Servicio;
+import com.pepito.reservas.catalogo.servicio.atributos.AtributoDinamico;
+import com.pepito.reservas.catalogo.servicio.atributos.TipoBooleano;
+import com.pepito.reservas.destino.Ciudad;
+import com.pepito.reservas.destino.Destino;
+import com.pepito.reservas.destino.TipoGeografico;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,14 +34,45 @@ class CatalogoTest {
     CriterioBusqueda todos = item -> true;
     CriterioBusqueda ninguno = item -> false;
 
+    Destino europa;
+    Destino america;
+    Destino italia;
+    Destino francia;
+    Ciudad roma;
+    Ciudad lyon;
+    Ciudad paris;
+
+    // Unico lugar donde se crean los objetos: si cambia un constructor, se toca aca.
+    private Destino continente(String nombre) {return new Destino(TipoGeografico.CONTINENTE, nombre);}
+    private Destino pais(String nombre) {return new Destino(TipoGeografico.PAIS, nombre);}
+    private Ciudad ciudad(String nombre) {return new Ciudad(TipoGeografico.CIUDAD, nombre);}
+
     private Servicio servicio(String nombre, String codigo, Categoria categoria, Double precio) {
         Disponibilidad d = new Disponibilidad();
         d.agregarCupoMasivo(periodo, 5);
-        return new Servicio(nombre, 0.0, d, codigo, "PROVEEDOR", categoria, precio);
+        return new Servicio(nombre, 0.0, d, codigo, "PROVEEDOR", categoria, precio, paris);
     }
     @BeforeEach
     void setUp() {
+        roma = ciudad("Roma");
+        lyon = ciudad("Lyon");
+        paris = ciudad("Paris");
+
+        italia = pais("Italia");
+        francia = pais("Francia");
+        europa = continente("Europa");
+        america = continente("America");
+
+        europa.agregarDestino(italia);
+        europa.agregarDestino(francia);
+
+        italia.agregarDestino(roma);
+        francia.agregarDestino(lyon);
+        francia.agregarDestino(paris);
+
+
         catalogo = new Catalogo();
+
         vuelo = servicio("Vuelo a Aruba", "123VUELO", Categoria.VUELO, 123.0);
         alojamiento = servicio("Hotel en Aruba", "123HOTEL", Categoria.ALOJAMIENTO, 32.5);
         auto = servicio("Alquiler de auto", "123AUTO", Categoria.ALQUILER_AUTO, 12.2);
