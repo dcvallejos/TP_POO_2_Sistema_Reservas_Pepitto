@@ -1,9 +1,13 @@
 package com.pepito.reservas.servicio;
 
+import com.pepito.reservas.catalogo.servicio.*;
 import com.pepito.reservas.excepciones.DisponibilidadException;
 import com.pepito.reservas.excepciones.ServiceExceptions;
-import com.pepito.reservas.servicio.atributos.AtributoDinamico;
-import com.pepito.reservas.servicio.atributos.TipoBooleano;
+import com.pepito.reservas.catalogo.servicio.atributos.AtributoDinamico;
+import com.pepito.reservas.catalogo.servicio.atributos.TipoBooleano;
+import com.pepito.reservas.destino.Ciudad;
+import com.pepito.reservas.destino.Destino;
+import com.pepito.reservas.destino.TipoGeografico;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,29 +30,57 @@ class PaqueteTest {
     LocalDate dia2 = LocalDate.of(2026, 1, 2);
     LocalDate dia3 = LocalDate.of(2026, 1, 3);
 
+    Destino europa;
+    Destino italia;
+    Destino francia;
+    Ciudad roma;
+    Ciudad lyon;
+    Ciudad paris;
+
+    // Unico lugar donde se crean los objetos: si cambia un constructor, se toca aca.
+    private Destino continente(String nombre) {return new Destino(TipoGeografico.CONTINENTE, nombre);}
+    private Destino pais(String nombre) {return new Destino(TipoGeografico.PAIS, nombre);}
+    private Ciudad ciudad(String nombre) {return new Ciudad(TipoGeografico.CIUDAD, nombre);}
+
+
     @BeforeEach
     void setUp() {
 
+        roma = ciudad("Roma");
+        lyon = ciudad("Lyon");
+        paris = ciudad("Paris");
+
+        italia = pais("Italia");
+        francia = pais("Francia");
+        europa = continente("Europa");
+
+        europa.agregarDestino(italia);
+        europa.agregarDestino(francia);
+
+        italia.agregarDestino(roma);
+        francia.agregarDestino(lyon);
+        francia.agregarDestino(paris);
+
         servicio_vuelo = new Servicio("Vuelo a Aruba", 0.1, new Disponibilidad(),
-                "123VUELO", "QATAR AIRWAYS", Categoria.VUELO, 123.0);
+                "123VUELO", "QATAR AIRWAYS", Categoria.VUELO, 123.0,roma);
 
         servicio_alojamiento = new Servicio("Hotel en Aruba", 0.15, new Disponibilidad(),
-                "123HOTEL", "AIRBNB", Categoria.ALOJAMIENTO, 32.5);
+                "123HOTEL", "AIRBNB", Categoria.ALOJAMIENTO, 32.5, lyon);
 
         servicio_auto = new Servicio("Alquiler de auto en Yahib", 0.00, new Disponibilidad(),
-                "123AUTO", "CAMEL TIRE", Categoria.ALQUILER_AUTO, 12.2);
+                "123AUTO", "CAMEL TIRE", Categoria.ALQUILER_AUTO, 12.2, italia);
 
         servicio_excursion = new Servicio("Excursion a tumbas de Sazagrev", 0.2, new Disponibilidad(),
-                "123TEMPLO", "WISE GUY TRAVEL AGENCY", Categoria.EXCURSION, 5.6);
+                "123TEMPLO", "WISE GUY TRAVEL AGENCY", Categoria.EXCURSION, 5.6, europa);
 
         disponibilidad = new Disponibilidad();
-        paquete_aruba = new Paquete("Pack Escapada Aruba", 0.1, "Paquete de prueba", disponibilidad);
+        paquete_aruba = new Paquete("Pack Escapada Aruba", 0.1, "Paquete de prueba", disponibilidad,paris);
     }
 
     // Servicio invalido: tiene un atributo dinamico cuyo valor no corresponde al tipo declarado
     private Servicio servicioInvalido() {
         Servicio s = new Servicio("Servicio invalido", 0.0, new Disponibilidad(),
-                "999INV", "PROVEEDOR", Categoria.EXCURSION, 10.0);
+                "999INV", "PROVEEDOR", Categoria.EXCURSION, 10.0,paris);
         s.agregarAtributo(new AtributoDinamico("Apto Mascotas", true, new TipoBooleano(), 4.5));
         return s;
     }
@@ -58,19 +90,19 @@ class PaqueteTest {
     @Test
     void paquete_con_error_creacion_descuento_mayor_a_1() {
         assertThrowsExactly(ServiceExceptions.ErrorCreacionPaquete.class,
-                () -> new Paquete("Pack Falso", 1.2, "Paquete invalido", new Disponibilidad()));
+                () -> new Paquete("Pack Falso", 1.2, "Paquete invalido", new Disponibilidad(), europa));
     }
 
     @Test
     void paquete_con_error_creacion_descuento_negativo() {
         assertThrowsExactly(ServiceExceptions.ErrorCreacionPaquete.class,
-                () -> new Paquete("Pack Falso", -0.1, "Paquete invalido", new Disponibilidad()));
+                () -> new Paquete("Pack Falso", -0.1, "Paquete invalido", new Disponibilidad(), europa));
     }
 
     @Test
     void paquete_acepta_descuentos_limite_0_y_1() {
-        Paquete sinDescuento = new Paquete("Test", 0.0, "Sin descuento", new Disponibilidad());
-        Paquete descuentoTotal = new Paquete("Test", 1.0, "Descuento total", new Disponibilidad());
+        Paquete sinDescuento = new Paquete("Test", 0.0, "Sin descuento", new Disponibilidad(), lyon);
+        Paquete descuentoTotal = new Paquete("Test", 1.0, "Descuento total", new Disponibilidad(), italia);
 
         sinDescuento.agregarItem(servicio_auto);
         descuentoTotal.agregarItem(servicio_auto);
@@ -114,10 +146,10 @@ class PaqueteTest {
 
     @Test
     void paquete_calcula_precio_segun_ejemplo_del_enunciado() {
-        Servicio hotel = new Servicio("Noche de Hotel Central", 0.0, new Disponibilidad(), "HC1", "HOTELES SA", Categoria.ALOJAMIENTO, 15000.0);
-        Servicio museo = new Servicio("Excursion Guiada Museo", 0.0, new Disponibilidad(), "EM1", "MUSEOS SA", Categoria.EXCURSION, 4000.0);
-        Servicio traslado = new Servicio("Traslado Aeropuerto-Hotel", 0.0, new Disponibilidad(), "TR1", "TRASLADOS SA", Categoria.ALQUILER_AUTO, 2000.0);
-        Paquete escapadaUrbana = new Paquete("Pack Escapada Urbana", 0.1, "Escapada urbana", new Disponibilidad());
+        Servicio hotel = new Servicio("Noche de Hotel Central", 0.0, new Disponibilidad(), "HC1", "HOTELES SA", Categoria.ALOJAMIENTO, 15000.0, europa);
+        Servicio museo = new Servicio("Excursion Guiada Museo", 0.0, new Disponibilidad(), "EM1", "MUSEOS SA", Categoria.EXCURSION, 4000.0, europa);
+        Servicio traslado = new Servicio("Traslado Aeropuerto-Hotel", 0.0, new Disponibilidad(), "TR1", "TRASLADOS SA", Categoria.ALQUILER_AUTO, 2000.0, europa);
+        Paquete escapadaUrbana = new Paquete("Pack Escapada Urbana", 0.1, "Escapada urbana", new Disponibilidad(), europa);
 
         escapadaUrbana.agregarItem(hotel);
         escapadaUrbana.agregarItem(museo);
@@ -130,7 +162,7 @@ class PaqueteTest {
     @Test
     void paquete_anidado_calcula_precio_final_de_forma_recursiva() {
 
-        Paquete paqueteInterno = new Paquete("Pack Interno", 0.1, "Paquete interno", new Disponibilidad());
+        Paquete paqueteInterno = new Paquete("Pack Interno", 0.1, "Paquete interno", new Disponibilidad(), europa);
 
         paqueteInterno.disponibilidad().agregarCupoMasivo(new Periodo(dia1,dia3),5);
         servicio_alojamiento.disponibilidad().agregarCupoMasivo(new Periodo(dia1,dia1),5);
@@ -140,7 +172,7 @@ class PaqueteTest {
         paqueteInterno.agregarItem(servicio_excursion);   //  4.48
         // interno: (27.625 + 4.48) * 0.9 = 28.8945
 
-        Paquete paqueteExterno = new Paquete("Pack Externo", 0.2, "Paquete externo", new Disponibilidad());
+        Paquete paqueteExterno = new Paquete("Pack Externo", 0.2, "Paquete externo", new Disponibilidad(), europa);
         paqueteExterno.agregarItem(paqueteInterno);
         paqueteExterno.agregarItem(servicio_vuelo);       // 110.7
         // externo: (28.8945 + 110.7) * 0.8 = 111.6756
@@ -173,14 +205,14 @@ class PaqueteTest {
 
     @Test
     void paquete_sin_nombre_es_invalido() {
-        Paquete paqueteInvalido = new Paquete(null, 0.1, "Paquete sin nombre", new Disponibilidad());
+        Paquete paqueteInvalido = new Paquete(null, 0.1, "Paquete sin nombre", new Disponibilidad(), europa);
 
         assertFalse(paqueteInvalido.validate());
     }
 
     @Test
     void paquete_sin_descripcion_es_invalido() {
-        Paquete paqueteInvalido = new Paquete("Pack sin descripcion", 0.1, null, new Disponibilidad());
+        Paquete paqueteInvalido = new Paquete("Pack sin descripcion", 0.1, null, new Disponibilidad(), europa);
 
         assertFalse(paqueteInvalido.validate());
     }
@@ -201,7 +233,7 @@ class PaqueteTest {
 
     @Test
     void paquete_es_invalido_si_un_paquete_anidado_deja_de_ser_valido() {
-        Paquete paqueteInterno = new Paquete("Pack Interno", 0.1, "Paquete interno", new Disponibilidad());
+        Paquete paqueteInterno = new Paquete("Pack Interno", 0.1, "Paquete interno", new Disponibilidad(), europa);
 
         paqueteInterno.disponibilidad().agregarCupoMasivo(new Periodo(dia1,dia3),5);
         paquete_aruba.disponibilidad().agregarCupoMasivo(new Periodo(dia1,dia3),5);
@@ -235,7 +267,7 @@ class PaqueteTest {
 
     @Test
     void paquete_agrega_paquete_valido_incrementa_cantidad() {
-        Paquete paqueteInterno = new Paquete("Pack Interno", 0.1, "Paquete interno", new Disponibilidad());
+        Paquete paqueteInterno = new Paquete("Pack Interno", 0.1, "Paquete interno", new Disponibilidad(), europa);
 
         paqueteInterno.disponibilidad().agregarCupoMasivo(new Periodo(dia1,dia3),5);
         servicio_auto.disponibilidad().agregarCupoMasivo(new Periodo(dia1,dia3),5);
@@ -257,7 +289,7 @@ class PaqueteTest {
 
     @Test
     void paquete_agrega_paquete_invalido_tira_excepcion() {
-        Paquete paqueteInvalido = new Paquete("Pack sin descripcion", 0.1, null, new Disponibilidad());
+        Paquete paqueteInvalido = new Paquete("Pack sin descripcion", 0.1, null, new Disponibilidad(), europa);
 
         assertThrowsExactly(ServiceExceptions.MetodoInvalido.class,
                 () -> paquete_aruba.agregarItem(paqueteInvalido));
