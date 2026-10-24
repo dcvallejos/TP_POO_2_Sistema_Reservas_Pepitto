@@ -4,7 +4,7 @@ import com.pepito.reservas.catalogo.ItemCatalogo;
 import com.pepito.reservas.reserva.estado.EstadoReserva;
 import com.pepito.reservas.reserva.estado.MetodoInvalidoException;
 import com.pepito.reservas.reserva.suscriptor.ReservaObserver;
-import com.pepito.reservas.servicio.GestorServicios;
+import com.pepito.reservas.catalogo.servicio.GestorServicios;
 import com.pepito.reservas.catalogo.Validador;
 import com.pepito.reservas.cliente.Cliente;
 import com.pepito.reservas.traslado.MetodoTraslado;
