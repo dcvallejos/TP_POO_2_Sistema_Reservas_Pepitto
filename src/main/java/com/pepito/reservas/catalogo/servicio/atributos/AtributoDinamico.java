@@ -1,6 +1,6 @@
-package com.pepito.reservas.servicio.atributos;
+package com.pepito.reservas.catalogo.servicio.atributos;
 
-import com.pepito.reservas.servicio.Validador;
+import com.pepito.reservas.catalogo.servicio.Validador;
 
 public class AtributoDinamico implements Validador {
 
