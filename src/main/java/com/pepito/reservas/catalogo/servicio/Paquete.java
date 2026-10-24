@@ -1,7 +1,8 @@
-package com.pepito.reservas.servicio;
+package com.pepito.reservas.catalogo.servicio;
 
 import com.pepito.reservas.catalogo.ItemCatalogo;
 import com.pepito.reservas.excepciones.ServiceExceptions;
+import com.pepito.reservas.destino.LugarGeografico;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,13 +17,14 @@ public class Paquete extends ItemCatalogo implements GestorServicios {
             String nombre,
             Double descuento,
             String descripcion,
-            Disponibilidad disponibilidad
+            Disponibilidad disponibilidad,
+            LugarGeografico destino
     ) {
         if (descuento < 0.0 || descuento > 1.0) {
             throw new ServiceExceptions.ErrorCreacionPaquete(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");
         }
 
-        super(nombre, descuento, disponibilidad);
+        super(nombre, descuento, disponibilidad, destino);
         this.descripcion = descripcion;
         this.servicios = new ArrayList<>();
     }

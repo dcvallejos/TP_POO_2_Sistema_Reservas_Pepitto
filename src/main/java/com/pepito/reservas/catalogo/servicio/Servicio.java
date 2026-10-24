@@ -1,8 +1,9 @@
-package com.pepito.reservas.servicio;
+package com.pepito.reservas.catalogo.servicio;
 
 import com.pepito.reservas.catalogo.ItemCatalogo;
 import com.pepito.reservas.excepciones.ServiceExceptions;
-import com.pepito.reservas.servicio.atributos.AtributoDinamico;
+import com.pepito.reservas.catalogo.servicio.atributos.AtributoDinamico;
+import com.pepito.reservas.destino.LugarGeografico;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,13 +25,14 @@ public class Servicio extends ItemCatalogo {
             String codigoReserva,
             String proveedor,
             Categoria categoria,
-            Double precioBase
+            Double precioBase,
+            LugarGeografico destino
         )
     {
         if (precioBase < 0.0){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "PrecioBase no puede ser negativo");}
         if (descuento < 0.0 || descuento > 1.0 ){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");}
 
-        super(nombre, descuento, disponibilidad);
+        super(nombre, descuento, disponibilidad, destino);
         this.codigoReserva = codigoReserva;
         this.proveedor = proveedor;
         this.categoria = categoria;

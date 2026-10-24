@@ -1,4 +1,4 @@
-package com.pepito.reservas.servicio;
+package com.pepito.reservas.catalogo.servicio;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;

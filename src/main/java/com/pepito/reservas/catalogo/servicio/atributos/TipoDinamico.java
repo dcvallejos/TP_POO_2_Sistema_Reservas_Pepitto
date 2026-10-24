@@ -1,4 +1,4 @@
-package com.pepito.reservas.servicio.atributos;
+package com.pepito.reservas.catalogo.servicio.atributos;
 
 public interface TipoDinamico {
 
