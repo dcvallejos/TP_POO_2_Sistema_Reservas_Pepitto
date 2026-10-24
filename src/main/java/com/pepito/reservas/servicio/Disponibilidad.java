@@ -1,23 +1,51 @@
 package com.pepito.reservas.servicio;
 
 import com.pepito.reservas.excepciones.DisponibilidadException;
+import com.pepito.reservas.excepciones.ServiceExceptions;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class Disponibilidad {
 
     HashMap<LocalDate, Integer> disponibilidad;
 
-
-    public Disponibilidad(HashMap<LocalDate, Integer> disponibilidad) {
-        this.disponibilidad = disponibilidad;
-    }
-
     public Disponibilidad() {
         this.disponibilidad = new HashMap<>();
     }
 
+    public Disponibilidad(Periodo periodo, Integer disponibilidad) {
+        this.disponibilidad = new HashMap<>();
+
+        this.agregarCupoMasivo(periodo, disponibilidad);
+    }
+
+    public Periodo periodo() {
+        return new Periodo(fechaInicio(), fechaFin());
+    }
+
+    public Boolean cubre(Periodo periodo) {
+        if (sinFechas()) {
+            return false;
+        }
+        return !fechaInicio().isBefore(periodo.fechaDesde())
+                && !fechaFin().isAfter(periodo.fechaHasta());
+    }
+
+    public LocalDate fechaInicio() {
+        return disponibilidad.keySet().stream()
+                .min(Comparator.naturalOrder())
+                .orElseThrow(() -> new ServiceExceptions.MetodoInvalido(
+                        "fechaInicio", "No hay fechas disponibles"));
+    }
+
+    public LocalDate fechaFin() {
+        return disponibilidad.keySet().stream()
+                .max(Comparator.naturalOrder())
+                .orElseThrow(() -> new ServiceExceptions.MetodoInvalido(
+                        "fechaFin", "No hay fechas disponibles"));
+    }
 
     public void agregarCupoMasivo(Periodo fechas, Integer cupo){
         // Agrega un cupo determinado durante un período, agregándose el mismo todos los días
@@ -33,6 +61,10 @@ public class Disponibilidad {
         this.disponibilidad.compute(fecha, (k, cuposActuales) ->
                 (cuposActuales == null) ? cupos : cuposActuales + cupos);
 
+    }
+
+    public Boolean sinFechas() {
+        return disponibilidad.isEmpty();
     }
 
     public void liberarFecha(LocalDate fecha, Integer cupos){
