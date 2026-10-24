@@ -7,14 +7,12 @@ import com.pepito.reservas.servicio.atributos.AtributoDinamico;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Servicio extends ItemCatalogo {
     String codigoReserva;
     String proveedor;
     Categoria categoria;
     Double precioBase;
-    Disponibilidad disponibilidad;
 
 
     List<AtributoDinamico> atributosAdicionales;
@@ -32,26 +30,28 @@ public class Servicio extends ItemCatalogo {
         if (precioBase < 0.0){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "PrecioBase no puede ser negativo");}
         if (descuento < 0.0 || descuento > 1.0 ){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");}
 
-        super(nombre, descuento);
+        super(nombre, descuento, disponibilidad);
         this.codigoReserva = codigoReserva;
-        this.disponibilidad = disponibilidad;
         this.proveedor = proveedor;
         this.categoria = categoria;
         this.precioBase = precioBase;
         this.atributosAdicionales = new ArrayList<>(List.of());
     }
 
-    public Disponibilidad getDisponibilidad() {
+    @Override
+    public Disponibilidad disponibilidad() {
         return disponibilidad;
     }
 
     public Boolean disponible(Periodo fechas, Integer cantidad) {
         return disponibilidad.periodoDisponible(fechas, cantidad);
     }
+
     @Override
     public Boolean disponible(LocalDate fecha, Integer cantidad) {
         return disponibilidad.fechaDisponible(fecha, cantidad);
     }
+    @Override
     public void reservar(Periodo fechas, Integer cantidad) {
         disponibilidad.bloquearPeriodo(fechas, cantidad);
     }
