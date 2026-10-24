@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -305,8 +304,8 @@ class ServicioTest {
         );
 
 
-        servicio_vuelo.getDisponibilidad().agregarCupoMasivo(periodo,10);
-        assertTrue(this.servicio_vuelo.getDisponibilidad().periodoDisponible(periodo,5 ));
+        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
+        assertTrue(this.servicio_vuelo.disponibilidad().periodoDisponible(periodo,5 ));
 
     }
 
@@ -320,9 +319,9 @@ class ServicioTest {
         LocalDate fechaConsulta = LocalDate.of(2026, 2, 2);
 
 
-        servicio_vuelo.getDisponibilidad().agregarCupoMasivo(periodo,10);
-        assertFalse(this.servicio_vuelo.getDisponibilidad().periodoDisponible(periodo,15 ));
-        assertEquals(10,servicio_vuelo.getDisponibilidad().cupo(fechaConsulta));
+        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
+        assertFalse(this.servicio_vuelo.disponibilidad().periodoDisponible(periodo,15 ));
+        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
 
     }
 
@@ -333,11 +332,11 @@ class ServicioTest {
                 LocalDate.of(2026, 2, 5)
         );
 
-        servicio_vuelo.getDisponibilidad().agregarCupoMasivo(periodo,10);
+        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
 
         assertThrows(
                 DisponibilidadException.PeriodoSinDisponibilidad.class,
-                () -> servicio_vuelo.getDisponibilidad().bloquearPeriodo(periodo, 11)
+                () -> servicio_vuelo.disponibilidad().bloquearPeriodo(periodo, 11)
         );
 
     }
@@ -350,12 +349,12 @@ class ServicioTest {
         );
         LocalDate fechaConsulta = LocalDate.of(2026, 2, 1);
 
-        servicio_vuelo.getDisponibilidad().agregarCupoMasivo(periodo,10);
-        assertEquals(10,servicio_vuelo.getDisponibilidad().cupo(fechaConsulta));
+        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
+        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
 
-        servicio_vuelo.getDisponibilidad().bloquearPeriodo(periodo, 5);
+        servicio_vuelo.disponibilidad().bloquearPeriodo(periodo, 5);
 
-        assertEquals(5,servicio_vuelo.getDisponibilidad().cupo(fechaConsulta));
+        assertEquals(5,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
 
     }
 
@@ -367,12 +366,12 @@ class ServicioTest {
         );
         LocalDate fechaConsulta = LocalDate.of(2026, 2, 1);
 
-        servicio_vuelo.getDisponibilidad().agregarCupoMasivo(periodo,10);
-        assertEquals(10,servicio_vuelo.getDisponibilidad().cupo(fechaConsulta));
+        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
+        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
 
-        servicio_vuelo.getDisponibilidad().liberarPeriodo(periodo, 5);
+        servicio_vuelo.disponibilidad().liberarPeriodo(periodo, 5);
 
-        assertEquals(15,servicio_vuelo.getDisponibilidad().cupo(fechaConsulta));
+        assertEquals(15,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
 
     }
 
@@ -388,14 +387,14 @@ class ServicioTest {
         );
         LocalDate fechaConsulta = LocalDate.of(2026, 2, 1);
 
-        servicio_vuelo.getDisponibilidad().agregarCupoMasivo(periodo,10);
-        assertEquals(10,servicio_vuelo.getDisponibilidad().cupo(fechaConsulta));
+        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
+        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
 
         assertThrowsExactly(
                 DisponibilidadException.PeriodoSinDisponibilidad.class,
-                () -> servicio_vuelo.getDisponibilidad().liberarPeriodo(periodo2, 5)
+                () -> servicio_vuelo.disponibilidad().liberarPeriodo(periodo2, 5)
                 );
-        assertEquals(10,servicio_vuelo.getDisponibilidad().cupo(fechaConsulta));
+        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
 
     }
 
@@ -408,18 +407,18 @@ class ServicioTest {
 
         LocalDate fechaConsulta = LocalDate.of(2026, 2, 2);
 
-        servicio_vuelo.getDisponibilidad().agregarCupoMasivo(periodo,10);
+        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
 
-        assertEquals(10,servicio_vuelo.getDisponibilidad().cupo(fechaConsulta));
+        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
 
-        servicio_vuelo.getDisponibilidad().bloquearFecha(fechaConsulta,10);
+        servicio_vuelo.disponibilidad().bloquearFecha(fechaConsulta,10);
 
         assertThrowsExactly(
                 DisponibilidadException.FechaSinDisponibilidad.class,
-                () -> servicio_vuelo.getDisponibilidad().bloquearFecha(fechaConsulta, 11)
+                () -> servicio_vuelo.disponibilidad().bloquearFecha(fechaConsulta, 11)
                 );
-        assertEquals(0,servicio_vuelo.getDisponibilidad().cupo(fechaConsulta));
-        assertEquals(10,servicio_vuelo.getDisponibilidad().cupo(fechaConsulta.minusDays(1)));
+        assertEquals(0,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
+        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta.minusDays(1)));
 
     }
 }
