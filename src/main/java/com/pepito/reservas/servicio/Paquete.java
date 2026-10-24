@@ -10,23 +10,26 @@ import java.util.List;
 public class Paquete extends ItemCatalogo implements GestorServicios {
 
     String descripcion;
-    Double precioBase;
     List<ItemCatalogo> servicios;
 
     public Paquete(
             String nombre,
             Double descuento,
             String descripcion,
-            Double precioBase
-        )
-    {
-        if (precioBase < 0.0){throw new ServiceExceptions.ErrorCreacionPaquete(nombre, "PrecioBase no puede ser negativo");}
-        if (descuento < 0.0 || descuento > 1.0 ){throw new ServiceExceptions.ErrorCreacionPaquete(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");}
+            Disponibilidad disponibilidad
+    ) {
+        if (descuento < 0.0 || descuento > 1.0) {
+            throw new ServiceExceptions.ErrorCreacionPaquete(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");
+        }
 
-        super(nombre, descuento);
+        super(nombre, descuento, disponibilidad);
         this.descripcion = descripcion;
-        this.precioBase = precioBase;
-        this.servicios = new ArrayList<>(List.of());;
+        this.servicios = new ArrayList<>();
+    }
+
+    @Override
+    public Disponibilidad disponibilidad() {
+        return disponibilidad;
     }
 
     @Override
@@ -45,39 +48,51 @@ public class Paquete extends ItemCatalogo implements GestorServicios {
     }
 
     @Override
+    public Boolean disponible(Periodo fechas, Integer cantidad) {
+        return disponibilidad.periodoDisponible(fechas, cantidad);
+    }
+
+    @Override
     public Boolean disponible(LocalDate fecha, Integer cantidad) {
-        return null;
+        return disponibilidad.fechaDisponible(fecha, cantidad);
+    }
+
+    @Override
+    public void reservar(Periodo fechas, Integer cantidad) {
+        disponibilidad.bloquearPeriodo(fechas, cantidad);
+
+        for (ItemCatalogo item : servicios){
+            item.disponibilidad().bloquearPeriodo(fechas, cantidad);
+        }
     }
 
     @Override
     public void reservar(LocalDate fecha, Integer cantidad) {
-
+        disponibilidad.bloquearFecha(fecha, cantidad);
+        for (ItemCatalogo item : servicios){
+            item.disponibilidad().bloquearFecha(fecha, cantidad);
+        }
     }
 
     @Override
-    public Boolean validate() throws ExceptionInInitializerError {
-        if (
-                nombre == null
-                        || descripcion == null
-                        || precioBase == null
-                        || descuento == null
-        ){
+    public Boolean validate() {
+        if (nombre == null || descripcion == null || disponibilidad.sinFechas()) {
             return false;
         }
 
-        return servicios.stream().allMatch(ItemCatalogo::validate);
+        Periodo periodoPaquete = disponibilidad.periodo();
+
+        return servicios.stream().allMatch(item ->
+                item.validate() && item.cubre(periodoPaquete));
     }
 
     @Override
-    public void agregarItem(ItemCatalogo item) throws ServiceExceptions {
-
-        if(item.validate()){
+    public void agregarItem(ItemCatalogo item) {
+        if (item.validate()) {
             this.servicios.add(item);
+        } else {
+            throw new ServiceExceptions.MetodoInvalido("Agregar Servicio", "No se pudo agregar el " + item.getClass().getName());
         }
-        else{
-            throw new ServiceExceptions.MetodoInvalido("Agregar Servicio", "No se pudo agregar el " + item.getClass().getName()) ;
-        }
-
     }
 
     @Override
@@ -86,9 +101,7 @@ public class Paquete extends ItemCatalogo implements GestorServicios {
     }
 
     @Override
-    public Integer cantidadItems(){
+    public Integer cantidadItems() {
         return servicios.size();
     }
-
-
 }
