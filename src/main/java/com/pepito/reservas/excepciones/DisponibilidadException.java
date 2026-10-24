@@ -1,6 +1,6 @@
 package com.pepito.reservas.excepciones;
 
-import com.pepito.reservas.servicio.Periodo;
+import com.pepito.reservas.catalogo.servicio.Periodo;
 
 import java.time.LocalDate;
 
