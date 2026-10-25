@@ -1,5 +1,6 @@
 package com.pepito.reservas.reserva;
 
+
 /*
  * El cliente hizo el check-in previo. Si cancela: se libera el Cupo y se reembolsan Servicios y Tasas.
  */

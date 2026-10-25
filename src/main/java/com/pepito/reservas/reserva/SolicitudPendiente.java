@@ -1,6 +1,7 @@
 package com.pepito.reservas.reserva;
 
 import com.pepito.reservas.catalogo.ItemCatalogo;
+import com.pepito.reservas.catalogo.servicio.Periodo;
 import com.pepito.reservas.metodoDePago.MetodoDePago;
 import com.pepito.reservas.traslado.MetodoTraslado;
 
@@ -14,19 +15,14 @@ class SolicitudPendiente extends EstadoReserva {
         super(NombreEstado.SOLICITUD_PENDIENTE);
     }
 
-	/*
-	 * TODO: Yo creo que a efectivizarAgregadoDeItem hay que pasarle:
-	 * 		- por parametro: una fecha (para ver los cupos de ese item en esa fecha)
-	 * 		- por llamamiento: reserva.cantidadPasajeros (para ver si dichos cupos alcanzan)
-	 */
     @Override
-    void agregarItem(Reserva reserva, ItemCatalogo item /*,LocalDate fecha*/) {
-        reserva.efectivizarAgregadoDeItem(item /*, fecha, reserva.cantidadPasajeros*/);
+    void agregarItem(Reserva reserva, ItemCatalogo item, Periodo periodo) {
+        reserva.efectivizarAgregadoDeItem(item, periodo);
     }
 
     @Override
-    void quitarItem(Reserva reserva, ItemCatalogo item) {
-        reserva.efectivizarEliminacionDeItem(item);
+    void quitarItem(Reserva reserva, ItemCatalogo item, Periodo periodo) {
+        reserva.efectivizarEliminacionDeItem(item, periodo);
     }
 
     @Override

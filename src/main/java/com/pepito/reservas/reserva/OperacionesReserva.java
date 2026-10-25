@@ -1,6 +1,7 @@
 package com.pepito.reservas.reserva;
  
 import com.pepito.reservas.catalogo.ItemCatalogo;
+import com.pepito.reservas.catalogo.servicio.Periodo;
 import com.pepito.reservas.metodoDePago.MetodoDePago;
 import com.pepito.reservas.traslado.MetodoTraslado;
  
@@ -11,13 +12,13 @@ import com.pepito.reservas.traslado.MetodoTraslado;
 
 public interface OperacionesReserva {
  
-    void agregarItem(ItemCatalogo item);
+    void agregarItem(ItemCatalogo item, Periodo periodo);
  
-    void quitarItem(ItemCatalogo item);
+    void quitarItem(ItemCatalogo item, Periodo periodo);
  
     void elegirTraslado(MetodoTraslado metodoTraslado);
  
-    void confirmar(MetodoDePago metodoPago);
+    void confirmar(MetodoDePago metodoDePago);
  
     void hacerCheckIn();
  

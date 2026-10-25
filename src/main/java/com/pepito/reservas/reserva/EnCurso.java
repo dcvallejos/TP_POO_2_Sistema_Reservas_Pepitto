@@ -1,5 +1,6 @@
 package com.pepito.reservas.reserva;
 
+
 /*
  * El viaje está en ejecución. Si cancela:
  * 		- Solo se reembolsan los Servicios no disfrutados (sin tasas administrativas).

@@ -1,5 +1,6 @@
 package com.pepito.reservas.reserva;
 
+
 /*
  * Reserva confirmada/pagada: el Cupo ya está bloqueado.
  */
