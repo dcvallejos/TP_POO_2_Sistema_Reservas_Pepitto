@@ -1,12 +1,12 @@
 package com.pepito.reservas.reserva;
 
-import com.pepito.reservas.catalogo.ItemCatalogo;
+import com.pepito.reservas.catalogo.Validador;
 import com.pepito.reservas.reserva.estado.MetodoInvalidoException;
 
 public interface GestorReservas {
 
-    void agregarServicio(ItemCatalogo item);
-    void quitarServicio(ItemCatalogo item);
+    void agregarServicio(Validador item);
+    void quitarServicio(Validador item);
 
     void confirmar();
     void checkIn();
