@@ -44,6 +44,11 @@ public class Servicio extends ItemCatalogo {
     public Disponibilidad disponibilidad() {
         return disponibilidad;
     }
+    
+    @Override
+    public Boolean perteneceA(Categoria categoria) {
+        return this.categoria == categoria;
+    }
 
     public Boolean disponible(Periodo fechas, Integer cantidad) {
         return disponibilidad.periodoDisponible(fechas, cantidad);
