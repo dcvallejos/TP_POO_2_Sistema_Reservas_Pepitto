@@ -3,6 +3,7 @@ package com.pepito.reservas.catalogo;
 import com.pepito.reservas.catalogo.servicio.Disponibilidad;
 import com.pepito.reservas.catalogo.servicio.Periodo;
 import com.pepito.reservas.destino.LugarGeografico;
+import com.pepito.reservas.catalogo.servicio.Categoria;
 
 import java.time.LocalDate;
 
@@ -27,6 +28,7 @@ public abstract class ItemCatalogo implements Validador {
     public abstract void reservar(Periodo fechas, Integer cantidad);
     public abstract void reservar(LocalDate fecha, Integer cantidad);
     public abstract Disponibilidad disponibilidad();
+    public abstract Boolean perteneceA(Categoria categoria);
 
     // Pre-implementados (comunes a todos)
     public Boolean cubre(Periodo periodo) {return disponibilidad.cubre(periodo);}

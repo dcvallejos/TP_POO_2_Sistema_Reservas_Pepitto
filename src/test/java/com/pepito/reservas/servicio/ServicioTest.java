@@ -496,4 +496,13 @@ class ServicioTest {
         assertEquals(6, servicio_vuelo.disponibilidad().cupo(LocalDate.of(2026, 2, 1)));
         assertEquals(6, servicio_vuelo.disponibilidad().cupo(LocalDate.of(2026, 2, 5)));
     }
+    
+    @Test
+    void unServicioPerteneceSoloASuCategoria() {
+        Servicio hotel = servicio_alojamiento;
+
+        assertTrue(hotel.perteneceA(Categoria.ALOJAMIENTO));
+        assertFalse(hotel.perteneceA(Categoria.VUELO));
+    }
+
 }

@@ -33,6 +33,11 @@ public class Paquete extends ItemCatalogo implements GestorServicios {
     public Disponibilidad disponibilidad() {
         return disponibilidad;
     }
+    
+    @Override
+    public Boolean perteneceA(Categoria categoria) {
+        return servicios.stream().anyMatch(item -> item.perteneceA(categoria));
+    }
 
     @Override
     public Double precioBase() {
