@@ -388,4 +388,18 @@ class PaqueteTest {
         assertEquals(1, disponibilidad.cupo(dia2));
         assertEquals(5, disponibilidad.cupo(dia3));
     }
+    
+    @Test
+    void unPaquetePerteneceALaCategoriaDeAlgunoDeSusItems() {
+        Paquete paquete = paquete_aruba;
+        paquete.agregarItem(servicio_alojamiento);
+
+        assertTrue(paquete.perteneceA(Categoria.ALOJAMIENTO));
+        assertFalse(paquete.perteneceA(Categoria.EXCURSION));
+    }
+
+    @Test
+    void unPaqueteVacioNoPerteneceANingunaCategoria() {
+        assertFalse(paquete_aruba.perteneceA(Categoria.ALOJAMIENTO));
+    }
 }
