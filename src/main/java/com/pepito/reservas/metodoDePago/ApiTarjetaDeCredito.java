@@ -6,6 +6,5 @@ public interface ApiTarjetaDeCredito {
 
     public void validar(int numeroDeTarjeta,int cvv , LocalDate fechaDeVencimiento);
     public void reservar();
-    public void notificar();
     public void ejecutar();
 }

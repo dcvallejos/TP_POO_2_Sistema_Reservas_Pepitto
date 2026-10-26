@@ -15,6 +15,7 @@ public class TarjetaDeCreditoInternacional  extends MetodoDePago{
         this.apiTarjetaDeCredito= apiTarjetaDeCredito;
         this.cvv = cvv;
         this.fechaDeVencimiento = fechaDeVencimiento;
+        this.nroTarjeta=nroTarjeta ;
     }
 
     @Override
@@ -35,9 +36,10 @@ public class TarjetaDeCreditoInternacional  extends MetodoDePago{
     }
 
     @Override
-    public void notificarResultado(Reserva reserva) {
+    public  ComprobantesDePago notificarResultado(Reserva reserva) {
         Voucher voucherImpreso= new Voucher  (cvv );
-        reserva.agregarAListaDeComprobantes(voucherImpreso);
+        //reserva.agregarAListaDeComprobantes(voucherImpreso);
+        return voucherImpreso ;
     }
 
 }
