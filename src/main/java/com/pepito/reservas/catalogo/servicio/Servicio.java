@@ -68,6 +68,16 @@ public class Servicio extends ItemCatalogo {
     }
 
     @Override
+    public void liberar(Periodo fechas, Integer cantidad) {
+        disponibilidad.liberarPeriodo(fechas, cantidad);
+    }
+
+    @Override
+    public void liberar(LocalDate fecha, Integer cantidad) {
+        disponibilidad.liberarFecha(fecha, cantidad);
+    }
+
+    @Override
     public Double precioBase() {
         return precioBase;
     }

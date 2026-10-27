@@ -27,6 +27,8 @@ public abstract class ItemCatalogo implements Validador {
     public abstract Double precioFinal();
     public abstract void reservar(Periodo fechas, Integer cantidad);
     public abstract void reservar(LocalDate fecha, Integer cantidad);
+    public abstract void liberar(Periodo fechas, Integer cantidad);
+    public abstract void liberar(LocalDate fecha, Integer cantidad);
     public abstract Disponibilidad disponibilidad();
     public abstract Boolean perteneceA(Categoria categoria);
 

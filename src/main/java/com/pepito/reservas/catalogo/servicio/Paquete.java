@@ -82,6 +82,23 @@ public class Paquete extends ItemCatalogo implements GestorServicios {
     }
 
     @Override
+    public void liberar(Periodo fechas, Integer cantidad) {
+        disponibilidad.liberarPeriodo(fechas, cantidad);
+
+        for (ItemCatalogo item : servicios){
+            item.disponibilidad().liberarPeriodo(fechas, cantidad);
+        }
+    }
+
+    @Override
+    public void liberar(LocalDate fecha, Integer cantidad) {
+        disponibilidad.liberarFecha(fecha, cantidad);
+        for (ItemCatalogo item : servicios){
+            item.disponibilidad().liberarFecha(fecha, cantidad);
+        }
+    }
+
+    @Override
     public Boolean validate() {
         if (nombre == null || descripcion == null || disponibilidad.sinFechas()) {
             return false;
