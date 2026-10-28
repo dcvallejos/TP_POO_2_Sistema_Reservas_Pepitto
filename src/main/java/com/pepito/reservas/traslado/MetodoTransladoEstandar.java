@@ -8,6 +8,7 @@ public class MetodoTransladoEstandar extends   MetodoTraslado{
 
     public MetodoTransladoEstandar(PlataformaTransporte plataformaTransporte,Direccion direccionDestino){
                 this.direccionDestino=direccionDestino;
+                this.plataformaTransporte=plataformaTransporte;
 
     }
 
