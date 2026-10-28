@@ -2,8 +2,12 @@ package com.pepito.reservas.traslado;
 
 import com.pepito.reservas.reserva.Reserva;
 
-public interface MetodoTraslado {
+public abstract class MetodoTraslado {
 
-    public Double costo(Reserva reserva);
+    public abstract Double costo(Reserva reserva);
+
+    public Boolean  getHayCupoDeGuias(){
+        return true  ;
+    }
 }
 //
