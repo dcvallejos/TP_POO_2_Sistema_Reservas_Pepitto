@@ -7,6 +7,9 @@ public class Voucher  extends Comprobante{
         super();
         this.nroId=nroId;
     }
+    public int getNroId(){
+        return nroId;
+    }
 
 
 
