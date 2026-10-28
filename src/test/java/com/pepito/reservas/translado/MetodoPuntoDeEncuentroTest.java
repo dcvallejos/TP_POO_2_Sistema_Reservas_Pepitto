@@ -1,59 +1,51 @@
 package com.pepito.reservas.translado;
 
-
-
-
 import com.pepito.reservas.reserva.Reserva;
 import com.pepito.reservas.traslado.MetodoPuntoDeEncuentro;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 public class MetodoPuntoDeEncuentroTest {
 
-    private MetodoPuntoDeEncuentro metodoPuntoDeEncuentro;
     private Reserva reservaMock;
 
     @BeforeEach
     public void setUp() {
-
+        // Creamos el mock de la reserva
         reservaMock = mock(Reserva.class);
-
-
-        metodoPuntoDeEncuentro = new MetodoPuntoDeEncuentro();
     }
 
     @Test
-    public void testCostoRetornaCero() {
+    public void testCostoConDisponibilidadDeGuiasRetornaCero() {
+        // 1. Instanciamos pasando true (hay cupo)
+        MetodoPuntoDeEncuentro metodo = new MetodoPuntoDeEncuentro(true);
 
-        Double costo = metodoPuntoDeEncuentro.costo(reservaMock);
-
-
-        assertEquals(0.0, costo);
-    }
-    @Test
-    public void testCostoConReservaNula() {
-
-        Double costo = metodoPuntoDeEncuentro.costo(null);
+        // 2. Ejecutamos el costo y verificamos que devuelva 0.0 sin romper
+        Double costo = metodo.costo(reservaMock);
         assertEquals(0.0, costo);
     }
 
     @Test
-    public void testCostoMultiplesInvocacionesEsConsistente() {
+    public void testCostoSinDisponibilidadDeGuiasLanzaExcepcion() {
+        // 1. Instanciamos pasando false (no hay cupo)
+        MetodoPuntoDeEncuentro metodo = new MetodoPuntoDeEncuentro(false);
 
-        assertEquals(0.0, metodoPuntoDeEncuentro.costo(reservaMock));
-        assertEquals(0.0, metodoPuntoDeEncuentro.costo(reservaMock));
-        assertEquals(0.0, metodoPuntoDeEncuentro.costo(reservaMock));
+        // 2. Verificamos que al invocar costo se lance una RuntimeException
+        assertThrows(RuntimeException.class, () -> {
+            metodo.costo(reservaMock);
+        });
     }
 
     @Test
-    public void testCostoConDiferentesReservasMockeadas() {
+    public void testHayDisponibilidadRetornaElValorConfigurado() {
+        // Verificamos que el método de disponibilidad responda correctamente según el estado
+        MetodoPuntoDeEncuentro metodoConCupo = new MetodoPuntoDeEncuentro(true);
+        assertTrue(metodoConCupo.getHayCupoDeGuias());
 
-        Reserva otraReservaMock = mock(Reserva.class);
-
-        Double costo = metodoPuntoDeEncuentro.costo(otraReservaMock);
-        assertEquals(0.0, costo);
+        MetodoPuntoDeEncuentro metodoSinCupo = new MetodoPuntoDeEncuentro(false);
+        assertFalse(metodoSinCupo.getHayCupoDeGuias());
     }
 }
