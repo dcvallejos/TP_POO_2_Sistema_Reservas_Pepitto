@@ -32,6 +32,6 @@ public class VoucherTest {
 
         Voucher voucher = new Voucher(1);
 
-        assertTrue(voucher instanceof Comprobante);
+        assertTrue(voucher instanceof ComprobantePago);
     }
 }

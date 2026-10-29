@@ -1,4 +1,4 @@
-package com.pepito.reservas.translado;
+package com.pepito.reservas.traslado;
 
 import com.pepito.reservas.reserva.Reserva;
 import com.pepito.reservas.traslado.MetodoPuntoDeEncuentro;
@@ -29,23 +29,16 @@ public class MetodoPuntoDeEncuentroTest {
     }
 
     @Test
-    public void testCostoSinDisponibilidadDeGuiasLanzaExcepcion() {
-        // 1. Instanciamos pasando false (no hay cupo)
-        MetodoPuntoDeEncuentro metodo = new MetodoPuntoDeEncuentro(false);
+    public void testConGuiasDisponiblesNoLanzaExcepcion() {
+        MetodoPuntoDeEncuentro metodo = new MetodoPuntoDeEncuentro(true);
 
-        // 2. Verificamos que al invocar costo se lance una RuntimeException
-        assertThrows(RuntimeException.class, () -> {
-            metodo.costo(reservaMock);
-        });
+        assertDoesNotThrow(() -> metodo.verificarDisponibilidad());
     }
 
     @Test
-    public void testHayDisponibilidadRetornaElValorConfigurado() {
-        // Verificamos que el método de disponibilidad responda correctamente según el estado
-        MetodoPuntoDeEncuentro metodoConCupo = new MetodoPuntoDeEncuentro(true);
-        assertTrue(metodoConCupo.getVerificarDisponibilidad());
+    public void testSinGuiasDisponiblesLanzaTrasladoNoDisponible() {
+        MetodoPuntoDeEncuentro metodo = new MetodoPuntoDeEncuentro(false);
 
-        MetodoPuntoDeEncuentro metodoSinCupo = new MetodoPuntoDeEncuentro(false);
-        assertFalse(metodoSinCupo.getVerificarDisponibilidad());
+        assertThrows(TrasladoNoDisponibleException.class, () -> metodo.verificarDisponibilidad());
     }
 }

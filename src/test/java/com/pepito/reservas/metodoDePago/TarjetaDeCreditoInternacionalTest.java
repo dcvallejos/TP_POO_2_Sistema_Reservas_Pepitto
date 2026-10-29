@@ -1,13 +1,13 @@
 package com.pepito.reservas.metodoDePago;
 
-import com.pepito.reservas.reserva.Reserva;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TarjetaDeCreditoInternacionalTest {
 
@@ -59,10 +59,7 @@ public class TarjetaDeCreditoInternacionalTest {
     @Test
     public void testNotificarResultadoGeneraVoucherYLoRegistraEnReserva() {
 
-        Reserva reservaMock = mock(Reserva.class);
-
-
-        ComprobantePago resultado = tarjetaPago.notificarResultado(reservaMock);
+        ComprobantePago resultado = tarjetaPago.notificarResultado(100.0);
 
 
         assertNotNull(resultado);

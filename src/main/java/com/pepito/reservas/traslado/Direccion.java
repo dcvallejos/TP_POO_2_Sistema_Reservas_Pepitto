@@ -1,5 +1,7 @@
 package com.pepito.reservas.traslado;
 
+import com.pepito.reservas.destino.Destino;
+
 public class Direccion {
     private String calle;
     private int nro ;
@@ -8,14 +10,19 @@ public class Direccion {
     public Direccion(String calle , int nro , Destino destino  ){
         this.calle = calle ;
         this. nro= nro;
-        this.destino =destino ;
+        this.destino = destino ;
     }
 
     public int getNro() {
         return nro;
     }
+    
     public String getCalle(){
         return calle;
+    }
+    
+    public Destino getDestino() {
+    	return destino;
     }
 }
 

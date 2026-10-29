@@ -119,7 +119,7 @@ class ReservaRelacionesTest {
         ItemCatalogo hotel = item(1000);
         reserva.agregarItem(hotel, PERIODO);
         MetodoTraslado traslado = mock(MetodoTraslado.class);
-        doThrow(new TrasladoNoDisponibleException("sin guías")).when(traslado).verificarDisponibilidad(reserva);
+        doThrow(new TrasladoNoDisponibleException("sin guías")).when(traslado).verificarDisponibilidad();
         reserva.elegirTraslado(traslado);
         MetodoDePago pago = pago();
 
@@ -138,7 +138,7 @@ class ReservaRelacionesTest {
 
         reserva.confirmar(pago());
 
-        verify(traslado).verificarDisponibilidad(reserva);
+        verify(traslado).verificarDisponibilidad();
     }
 
     /* Validación de ítems */
@@ -242,7 +242,7 @@ class ReservaRelacionesTest {
         reserva.confirmar(pago);
 
         assertEquals(2000, reserva.getTotalServicios(), 0.001);
-        verify(pago).procesarPago(2000);
+        verify(pago).procesarPago(2000.0);
     }
 
     /* Servicios no disfrutados: se reembolsan solo las líneas que todavía no empezaron */

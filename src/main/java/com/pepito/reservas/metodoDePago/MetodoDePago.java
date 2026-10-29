@@ -1,7 +1,5 @@
 package com.pepito.reservas.metodoDePago;
 
-import com.pepito.reservas.reserva.Reserva;
-
 public  abstract class MetodoDePago {
 
     public MetodoDePago(){

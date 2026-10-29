@@ -13,7 +13,7 @@ public class MetodoTrasladoVip  extends   MetodoTraslado{
 
     @Override
     public Double costo(Reserva reserva) {
-        return (double) trasladoVip.calcularCosto(reserva.getTotalServicios() );
+        return (double) trasladoVip.calcularCosto((float) reserva.getTotalServicios() );
     }
 
 }

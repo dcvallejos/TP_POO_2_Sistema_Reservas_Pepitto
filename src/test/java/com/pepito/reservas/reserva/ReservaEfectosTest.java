@@ -189,7 +189,7 @@ class ReservaEfectosTest {
 
         reserva.confirmar(pago);
 
-        verify(pago).procesarPago(1700);
+        verify(pago).procesarPago(1700.0);
         Cobro cobro = reserva.getCobro().orElseThrow();
         assertEquals(1500, cobro.montoServicios(), 0.001);
         assertEquals(200, cobro.montoTasas(), 0.001);

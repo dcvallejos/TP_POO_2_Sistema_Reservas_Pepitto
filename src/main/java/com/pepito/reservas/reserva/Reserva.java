@@ -153,7 +153,7 @@ public class Reserva implements OperacionesReserva {
 
     /* Si hay un traslado elegido, él decide si está disponible (lanza TrasladoNoDisponibleException si no). */
     void verificarDisponibilidadTraslado() {
-        this.metodoTraslado.ifPresent(traslado -> traslado.verificarDisponibilidad(this));
+        this.metodoTraslado.ifPresent(traslado -> traslado.verificarDisponibilidad());
     }
 
     /*

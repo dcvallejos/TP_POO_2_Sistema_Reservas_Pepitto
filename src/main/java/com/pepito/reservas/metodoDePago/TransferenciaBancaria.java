@@ -1,7 +1,5 @@
 package com.pepito.reservas.metodoDePago;
 
-import com.pepito.reservas.reserva.Reserva;
-
 public class TransferenciaBancaria extends MetodoDePago{
     private ApiTransferencia apiTrasnferencia;
     private int cbu;
