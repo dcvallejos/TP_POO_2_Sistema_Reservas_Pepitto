@@ -5,5 +5,5 @@ public interface ApiBilletera {
     public void validar();
     public void reservar();
     public void ejecutar();
-    public void notificar();
+    public ComprobantePago notificar();
 }

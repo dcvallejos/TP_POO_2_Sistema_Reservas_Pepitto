@@ -2,11 +2,11 @@ package com.pepito.reservas.traslado;
 
 import com.pepito.reservas.reserva.Reserva;
 
-public class MetodoTransladoEstandar extends   MetodoTraslado{
+public class MetodoTrasladoEstandar extends   MetodoTraslado{
     private  PlataformaTransporte plataformaTransporte ;
     private final Direccion direccionDestino;
 
-    public MetodoTransladoEstandar(PlataformaTransporte plataformaTransporte,Direccion direccionDestino){
+    public MetodoTrasladoEstandar(PlataformaTransporte plataformaTransporte,Direccion direccionDestino){
                 this.direccionDestino=direccionDestino;
                 this.plataformaTransporte=plataformaTransporte;
 
@@ -15,6 +15,6 @@ public class MetodoTransladoEstandar extends   MetodoTraslado{
 
     @Override
     public Double costo(Reserva reserva) {
-        return plataformaTransporte.estimarTranslado(reserva.getCantidadDePasajeros(),direccionDestino);
+        return plataformaTransporte.estimarTraslado(reserva.getCantidadPasajeros(),direccionDestino);
     }
 }

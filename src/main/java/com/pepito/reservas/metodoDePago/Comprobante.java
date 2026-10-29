@@ -1,6 +1,6 @@
 package com.pepito.reservas.metodoDePago;
 
-public class Comprobante extends ComprobantesDePago {
+public class Comprobante extends ComprobantePago {
     private String alias;
     private int  cbu ;
 

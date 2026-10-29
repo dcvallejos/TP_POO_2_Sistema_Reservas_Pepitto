@@ -8,15 +8,17 @@ public  abstract class MetodoDePago {
 
     }
 // template method
-    public final ComprobantesDePago procesarPago(Reserva reserva ) { // métodoTemplate
+    public final ComprobantePago procesarPago(Double monto  ) { // métodoTemplate
         this.validarDatos();
         this.reservarFondos();
         this.ejecutarTransaccion();
-        return this.notificarResultado(reserva);
+        return this.notificarResultado(monto );
     }
 
-    public abstract void  validarDatos() ;
-    public abstract void reservarFondos() ;
-    public  abstract  void ejecutarTransaccion();
-    public  abstract ComprobantesDePago notificarResultado( Reserva reserva);
+    protected abstract void  validarDatos() ;
+    protected abstract void reservarFondos() ;
+    protected   abstract  void ejecutarTransaccion();
+    protected   ComprobantePago notificarResultado( Double monto ) {
+        return new ComprobantePago();
+    }
 }

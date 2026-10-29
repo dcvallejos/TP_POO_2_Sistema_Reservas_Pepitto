@@ -6,8 +6,6 @@ public abstract class MetodoTraslado {
 
     public abstract Double costo(Reserva reserva);
 
-    public Boolean  getHayCupoDeGuias(){
-        return true  ;
-    }
+    public void verificarDisponibilidad(){}
 }
 //

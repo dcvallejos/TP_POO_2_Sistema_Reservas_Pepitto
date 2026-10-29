@@ -62,7 +62,7 @@ public class TarjetaDeCreditoInternacionalTest {
         Reserva reservaMock = mock(Reserva.class);
 
 
-        ComprobantesDePago resultado = tarjetaPago.notificarResultado(reservaMock);
+        ComprobantePago resultado = tarjetaPago.notificarResultado(reservaMock);
 
 
         assertNotNull(resultado);

@@ -19,27 +19,25 @@ public class TarjetaDeCreditoInternacional  extends MetodoDePago{
     }
 
     @Override
-    public void validarDatos() {
+    protected void validarDatos() {
         apiTarjetaDeCredito.validar(  nroTarjeta ,  cvv , fechaDeVencimiento) ;
     }
 
     @Override
-    public void reservarFondos() {
+    protected void reservarFondos() {
         apiTarjetaDeCredito.reservar();
 
     }
 
 
     @Override
-    public void ejecutarTransaccion() {
+    protected void ejecutarTransaccion() {
         apiTarjetaDeCredito.ejecutar();
     }
 
     @Override
-    public  ComprobantesDePago notificarResultado(Reserva reserva) {
-        Voucher voucherImpreso= new Voucher  (cvv );
-        //reserva.agregarAListaDeComprobantes(voucherImpreso);
-        return voucherImpreso ;
+    protected   ComprobantePago notificarResultado(Double monto ) {
+        return  new Voucher  (cvv );
     }
 
 }

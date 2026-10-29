@@ -10,23 +10,23 @@ public class BilleteraVirtual  extends MetodoDePago{
     }
 
     @Override
-    public void validarDatos() {
+    protected  void validarDatos() {
             apiBilletera.validar();
     }
 
     @Override
-    public void reservarFondos() {
+    protected void reservarFondos() {
         apiBilletera.reservar();
 
     }
 
     @Override
-    public void ejecutarTransaccion() {
+    protected void ejecutarTransaccion() {
         apiBilletera.ejecutar();
     }
 
     @Override
-    public void notificarResultado(Reserva reserva) {
-        apiBilletera.notificar();
+    protected ComprobantePago  notificarResultado(Double monto ) {
+         return apiBilletera.notificar();
     }
 }

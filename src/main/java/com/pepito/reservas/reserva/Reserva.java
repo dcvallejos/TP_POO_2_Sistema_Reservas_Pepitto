@@ -1,5 +1,6 @@
 package com.pepito.reservas.reserva;
 
+import com.pepito.reservas.metodoDePago.Voucher;
 import com.pepito.reservas.reserva.estado.EstadoReserva;
 import com.pepito.reservas.reserva.estado.MetodoInvalidoException;
 import com.pepito.reservas.reserva.suscriptor.ReservaObserver;
@@ -18,6 +19,7 @@ public class Reserva implements GestorServicios, GestorReservas {
     MetodoTraslado metodoTraslado;
     List<VoucherCredito> vouchers;
     List<ReservaObserver> observadores;
+    int cantPasajeros ;
 
     public Reserva(){}
 
@@ -79,6 +81,15 @@ public class Reserva implements GestorServicios, GestorReservas {
     }
     public void notificar(EstadoReserva anterior, EstadoReserva nuevo){
 
+    }
+    public float getTotalServicios() {
+        return 0.0; // O el tipo de dato que vaya a devolver (Double o int)
+    }
+    public void agregarALaListaDeComprobantes(Voucher voucher ) {
+        // Método temporal para que compile el proyecto
+    }
+    public int getCantidadDePasajeros(){
+        return this.cantPasajeros;
     }
 
 }

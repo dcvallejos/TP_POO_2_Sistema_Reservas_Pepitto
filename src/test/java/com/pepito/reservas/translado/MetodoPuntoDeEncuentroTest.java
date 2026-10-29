@@ -43,9 +43,9 @@ public class MetodoPuntoDeEncuentroTest {
     public void testHayDisponibilidadRetornaElValorConfigurado() {
         // Verificamos que el método de disponibilidad responda correctamente según el estado
         MetodoPuntoDeEncuentro metodoConCupo = new MetodoPuntoDeEncuentro(true);
-        assertTrue(metodoConCupo.getHayCupoDeGuias());
+        assertTrue(metodoConCupo.getVerificarDisponibilidad());
 
         MetodoPuntoDeEncuentro metodoSinCupo = new MetodoPuntoDeEncuentro(false);
-        assertFalse(metodoSinCupo.getHayCupoDeGuias());
+        assertFalse(metodoSinCupo.getVerificarDisponibilidad());
     }
 }
