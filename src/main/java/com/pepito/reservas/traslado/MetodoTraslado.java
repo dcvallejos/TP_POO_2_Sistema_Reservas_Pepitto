@@ -1,4 +1,11 @@
 package com.pepito.reservas.traslado;
 
-public interface MetodoTraslado {
+import com.pepito.reservas.reserva.Reserva;
+
+public abstract class MetodoTraslado {
+
+    public abstract Double costo(Reserva reserva);
+
+    public void verificarDisponibilidad(){}
 }
+//
