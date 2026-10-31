@@ -197,7 +197,7 @@ public class Reserva implements OperacionesReserva {
 
     void generarVoucherReembolsoTotal() {
         double monto = this.cobroRealizado().total();
-        this.registrarVoucher(new VoucherCredito(monto, "Cancelación en check-in: reembolso de servicios y tasas"));
+        this.registrarVoucher(new VoucherCredito(monto, "Cancelación antes del viaje: reembolso de servicios y tasas"));
     }
  
     void generarVoucherReembolsoParcial() {
@@ -231,15 +231,13 @@ public class Reserva implements OperacionesReserva {
     }
 
     public double getTotalServiciosNoDisfrutados() {
+    	
+    	/* Se reembolsan las líneas cuyo período todavía no empezó; un paquete iniciado cuenta como consumido. */
         LocalDate hoy = LocalDate.now(this.reloj);
         return this.items.stream()
         		.filter(linea -> linea.getPeriodo().fechaDesde().isAfter(hoy))
         		.mapToDouble(linea -> linea.precioFinal() * this.cantidadPasajeros)
         		.sum();
-    	
-    	
-    	// Falta definir el criterio de "servicio disfrutado"
-    	//return this.cobroRealizado().montoServicios();
     }
 
     /* Los reembolsos solo se generan desde estados posteriores a confirmar, donde el Cobro siempre existe. */

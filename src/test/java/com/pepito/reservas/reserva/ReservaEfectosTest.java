@@ -140,7 +140,7 @@ class ReservaEfectosTest {
     }
 
     @Test
-    void cancelarDesdeConfirmadaLiberaElCupoDeCadaItemSinVoucher() {
+    void cancelarDesdeConfirmadaLiberaElCupoDeCadaItem() {
         Reserva reserva = nueva();
         ItemCatalogo a = item(100);
         reserva.agregarItem(a, PERIODO);
@@ -149,7 +149,6 @@ class ReservaEfectosTest {
         reserva.cancelar();
 
         verify(a).liberar(PERIODO, 1);
-        assertTrue(reserva.getVouchers().isEmpty());
     }
 
     @Test
@@ -274,6 +273,18 @@ class ReservaEfectosTest {
     /* Reembolsos (vouchers) */
 
     @Test
+    void cancelarDesdeConfirmadaReembolsaServiciosYTasas() {
+        Reserva reserva = confirmada(reservaConItemsYTraslado(200));
+
+        reserva.cancelar();
+
+        assertEquals(1, reserva.getVouchers().size());
+        VoucherCredito voucher = reserva.getVouchers().get(0);
+        assertEquals(1700, voucher.getMonto(), 0.001);
+        assertNotNull(voucher.getMotivo());
+    }
+    
+    @Test
     void cancelarDesdeCheckInReembolsaServiciosYTasas() {
         Reserva reserva = enCheckIn(reservaConItemsYTraslado(200));
 
@@ -293,7 +304,6 @@ class ReservaEfectosTest {
 
         assertEquals(1, reserva.getVouchers().size());
         VoucherCredito voucher = reserva.getVouchers().get(0);
-        // PROVISORIO: hoy "no disfrutados" == total de servicios cobrados. Ajustar cuando se defina el criterio.
         assertEquals(1500, voucher.getMonto(), 0.001);
         assertNotNull(voucher.getMotivo());
     }
