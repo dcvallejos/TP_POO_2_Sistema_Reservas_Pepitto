@@ -117,20 +117,6 @@ C:.
         └───java
 ```
 
-## Dependencias del 2.2
-
-El módulo 2.2 usa estas clases y métodos de otros módulos. Hasta que cada módulo los agregue, el 2.2 no compila:
-
-| Módulo | Qué necesita el 2.2 | Para qué |
-|--------|---------------------|----------|
-| 2.1 | `ItemCatalogo.liberar(Periodo fechas, Integer cantidad)` | Liberar un cupo por pasajero al cancelar o si falla el pago (el bloqueo ya existe: `reservar(Periodo, Integer)`) |
-| 2.3 | `MetodoTraslado.costo(Reserva reserva): double` | Calcular las tasas del traslado elegido |
-| 2.3 | `MetodoTraslado.verificarDisponibilidad(Reserva reserva)` | Verificar el traslado elegido antes de bloquear cupos y cobrar |
-| 2.3 | `TrasladoNoDisponibleException` (paquete `traslado`) | La lanza `verificarDisponibilidad` si no hay disponibilidad |
-| 2.4 | `MetodoDePago` con `ComprobantePago procesarPago(double monto)` (paquete `metodoDePago`) | Cobrar la reserva al confirmar |
-| 2.4 | `ComprobantePago` con `getCodigoTransaccion(): String` y `getMonto(): double` | Guardarlo en el `Cobro` |
-| 2.4 | `PagoRechazadoException` (paquete `metodoDePago`) | Saber que el pago falló y liberar los cupos |
-
 ## Tecnologías
 
 - Lenguaje: Java _(versión a definir)_
@@ -151,16 +137,3 @@ _Se va completando a medida que avanza el diseño._
 
 | Módulo | Decisión | Problema que resuelve | Alternativa descartada |
 |--------|----------|-----------------------|------------------------|
-| 2.2 | Patrón **State**: `Reserva` (Context) delega cada operación en `EstadoReserva` (State); cada estado concreto (ConcreteState) redefine solo las operaciones que le son válidas y el resto lanza `OperacionInvalidaException` | Agregar o cambiar un estado no obliga a tocar las demás operaciones; no hay `if`/`switch` sobre el estado | Un `enum` de estados con `switch` en cada operación de `Reserva` |
-| 2.2 | Los estados viven en el mismo paquete que `Reserva` y sus operaciones (y los efectos de `Reserva` que invocan) son package-private | Desde afuera solo se puede usar `OperacionesReserva`: nadie puede forzar una transición ni ejecutar un efecto fuera de lugar | Subpaquete `estado` con todo público, confiando en que nadie lo use mal |
-| 2.2 | La Reserva sabe **hacer** (bloquear cupos, cobrar, generar vouchers); el Estado decide **cuándo** | Cada estado se lee como la regla del enunciado y la lógica no se duplica entre estados | Que cada estado manipule directamente las colecciones de la Reserva |
-| 2.2 | Pago dentro de `confirmar(MetodoPago)`; orden: ítems → traslado → cupos → cobro → transición | La reserva no queda pagada sin cupo ni con cupos bloqueados sin pago; si algo falla, se deshace y no se notifica | Cobrar primero y devolver la plata si no hay cupo |
-| 2.2 | Bloqueo de cupos todo-o-nada, una unidad por pasajero | Si un ítem no tiene cupo, se liberan los ya bloqueados; una reserva de N pasajeros consume y paga N unidades | Bloquear ítem por ítem sin rollback; una unidad por ítem sin importar los pasajeros |
-| 2.2 | El precio de cada línea se fija al agregar el ítem (`ItemReservado` guarda `precioFinal`) | El cliente paga el precio que vio al armar la reserva; el total cobrado y los reembolsos salen de los mismos números | Consultar el precio actual del catálogo al cobrar y al reembolsar |
-| 2.2 | Servicios no disfrutados: al cancelar EN_CURSO se reembolsan solo las líneas cuyo período todavía no empezó (un paquete iniciado se considera consumido) | Regla única para servicios y paquetes, sin `instanceof`; el paquete es una unidad comercial indivisible | Reembolsar por componente del paquete (exige repartir el descuento y fechas por componente) |
-| 2.2 | Cada línea de la reserva es un `ItemReservado(item, periodo)`: `agregarItem(item, periodo)` | El ítem es uno solo en el catálogo; lo que se reserva es "ese ítem en esas fechas". La cantidad de pasajeros es de toda la reserva, no de cada línea | Guardar la fecha en el ítem (es de todas las reservas) o en la reserva (no permite ítems en fechas distintas) |
-| 2.2 | `Cobro` inmutable (montos, comprobante, fecha con `Clock` inyectable) | Reembolsos, factura y reportes usan lo que efectivamente se pagó y cuándo, aunque después cambien los precios | Recalcular con precios actuales al cancelar |
-| 2.2 | El traslado es un `Optional<MetodoTraslado>`: vacío al crear la reserva, con valor en `elegirTraslado` | Sin traslado elegido las tasas son 0 y no se verifica disponibilidad, sin `null` ni `if`; no se inventa un método de traslado que el enunciado no menciona | `metodoTraslado == null ? 0 : …`, o una clase `SinTraslado` (Null Object) ajena al 2.3 |
-| 2.2 | El 2.2 solo implementa sus propias clases; lo que necesita de otros módulos lo usa por su nombre y queda sin compilar hasta que ese módulo lo agregue (ver "Dependencias del 2.2") | Cada módulo es dueño de su código y el historial refleja quién hizo qué | Que el 2.2 cree clases y métodos de otros módulos para compilar |
-| 2.2 | Excepciones de dominio propias bajo `ReservaException` (`OperacionInvalida`, `ReservaVacia`, `ItemInvalido`, `ItemNoIncluido`, `CantidadPasajerosInvalida`) | El que llama puede distinguir y atrapar errores del dominio; el mensaje explica qué regla se violó | `RuntimeException` / `IllegalStateException` genéricas o devolver `null` |
-| 2.2/2.5 | Patrón **Observer**: `Reserva` (Subject) notifica a cada `ReservaObserver` con estado anterior y nuevo; un observer por subsistema; `RegistroReservas` los suscribe a cada reserva | Agregar subsistemas sin tocar `Reserva` ni a los demás (OCP); la Reserva no los conoce | Un único observer que hace todo, o que `Reserva` llame directamente a mail, factura y club |
