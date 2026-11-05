@@ -17,7 +17,7 @@ public class MetodoPuntoDeEncuentro extends   MetodoTraslado{
     @Override
     public void verificarDisponibilidad(){
         if (! this. verificarDisponibilidad ){
-         throw new RuntimeException("No hay disponibilidad de guías en el punto de encuentro.");
+         throw new TrasladoNoDisponibleException("No hay disponibilidad de guías en el punto de encuentro.");
         }
     }
 

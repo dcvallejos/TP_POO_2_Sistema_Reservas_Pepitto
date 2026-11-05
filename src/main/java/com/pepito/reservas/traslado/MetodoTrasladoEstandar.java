@@ -15,6 +15,6 @@ public class MetodoTrasladoEstandar extends   MetodoTraslado{
 
     @Override
     public Double costo(Reserva reserva) {
-        return plataformaTransporte.estimarTraslado(reserva.getCantidadPasajeros(),direccionDestino);
+        return (double) plataformaTransporte.estimarTraslado(reserva.getCantidadPasajeros(),direccionDestino);
     }
 }

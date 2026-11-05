@@ -1,7 +1,5 @@
 package com.pepito.reservas.metodoDePago;
 
-import com.pepito.reservas.reserva.Reserva;
-
 import java.time.LocalDate;
 
 public class TarjetaDeCreditoInternacional  extends MetodoDePago{

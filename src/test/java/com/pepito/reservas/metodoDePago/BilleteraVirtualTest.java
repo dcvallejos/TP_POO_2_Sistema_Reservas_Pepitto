@@ -14,14 +14,12 @@ public class BilleteraVirtualTest {
 
     private ApiBilletera apiBilleteraMock;
     private BilleteraVirtual billeteraVirtual;
-    private Reserva reservaMock;
     private ComprobantePago comprobanteEsperado;
 
     @BeforeEach
     public void setUp() {
         // 1. Creamos los mocks necesarios
         apiBilleteraMock = mock(ApiBilletera.class);
-         doubleMock = mock(Double.class);
         comprobanteEsperado = mock(ComprobantePago.class);
 
 
@@ -63,7 +61,7 @@ public class BilleteraVirtualTest {
 
 
 
-        ComprobantePago resultado = billeteraVirtual.notificarResultado(doubleMock);
+        ComprobantePago resultado = billeteraVirtual.notificarResultado(100.0);
 
         assertEquals(comprobanteEsperado, resultado);
         verify(apiBilleteraMock, times(1)).notificar();

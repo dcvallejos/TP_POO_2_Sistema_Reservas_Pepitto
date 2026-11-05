@@ -80,23 +80,25 @@ C:.
     │   │               │       Cliente.java
     │   │               │
     │   │               ├───notificador
-    │   │               ├───procesadorpago
+    │   │               ├───metodoDePago
     │   │               ├───reporte
     │   │               ├───reserva
-    │   │               │   │   GestorReservas.java
-    │   │               │   │   Reserva.java
+    │   │               │   │   Reserva.java                 (Context del State, Subject del Observer)
+    │   │               │   │   OperacionesReserva.java
+    │   │               │   │   RegistroReservas.java
+    │   │               │   │   Cobro.java
     │   │               │   │   VoucherCredito.java
-    │   │               │   │
-    │   │               │   ├───estado
-    │   │               │   │       Cancelada.java
-    │   │               │   │       CheckIn.java
-    │   │               │   │       Confirmada.java
-    │   │               │   │       EnCurso.java
-    │   │               │   │       EstadoReserva.java
-    │   │               │   │       Finalizada.java
-    │   │               │   │       MetodoInvalidoException.java
-    │   │               │   │       NombreEstado.java
-    │   │               │   │       SolicitudPendiente.java
+    │   │               │   │   EstadoReserva.java           (State; los estados concretos van en el
+    │   │               │   │   SolicitudPendiente.java       mismo paquete para que sus operaciones
+    │   │               │   │   Confirmada.java               sean package-private)
+    │   │               │   │   EnCheckIn.java
+    │   │               │   │   EnCurso.java
+    │   │               │   │   Finalizada.java
+    │   │               │   │   Cancelada.java
+    │   │               │   │   NombreEstado.java
+    │   │               │   │   ReservaException.java        (+ OperacionInvalida, ReservaVacia,
+    │   │               │   │                                   ItemInvalido, ItemNoIncluido,
+    │   │               │   │                                   CantidadPasajerosInvalida)
     │   │               │   │
     │   │               │   └───suscriptor
     │   │               │           ReservaObserver.java
@@ -135,4 +137,3 @@ _Se va completando a medida que avanza el diseño._
 
 | Módulo | Decisión | Problema que resuelve | Alternativa descartada |
 |--------|----------|-----------------------|------------------------|
-| _—_ | _—_ | _—_ | _—_ |
