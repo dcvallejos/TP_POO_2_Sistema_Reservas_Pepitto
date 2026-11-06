@@ -29,10 +29,11 @@ public class Servicio extends ItemCatalogo {
             LugarGeografico destino
         )
     {
+        super(nombre, descuento, disponibilidad, destino);
         if (precioBase < 0.0){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "PrecioBase no puede ser negativo");}
         if (descuento < 0.0 || descuento > 1.0 ){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");}
 
-        super(nombre, descuento, disponibilidad, destino);
+
         this.codigoReserva = codigoReserva;
         this.proveedor = proveedor;
         this.categoria = categoria;

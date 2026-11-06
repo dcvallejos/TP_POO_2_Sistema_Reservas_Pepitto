@@ -20,11 +20,12 @@ public class Paquete extends ItemCatalogo implements GestorServicios {
             Disponibilidad disponibilidad,
             LugarGeografico destino
     ) {
+        super(nombre, descuento, disponibilidad, destino);
         if (descuento < 0.0 || descuento > 1.0) {
             throw new ServiceExceptions.ErrorCreacionPaquete(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");
         }
 
-        super(nombre, descuento, disponibilidad, destino);
+
         this.descripcion = descripcion;
         this.servicios = new ArrayList<>();
     }
