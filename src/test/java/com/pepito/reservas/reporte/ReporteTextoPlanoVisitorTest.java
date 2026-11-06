@@ -50,5 +50,21 @@ public class ReporteTextoPlanoVisitorTest {
             assertNotNull(resultado);
             assertTrue(resultado.contains("EXPOSICIÓN DE PROVEEDOR"));
         }
+    @Test
+    public void testTextoPlanoExposicionProveedorDetalle() {
+        String resultado = visitor.visitorExposicionDeProvedor(exposicionMock);
+
+        assertNotNull(resultado);
+        assertTrue(resultado.length() > 0);
+    }
+
+    @Test
+    public void testNingunReporteTextoPlanoRetornaNulo() {
+        assertAll(
+                () -> assertNotNull(visitor.visitorServiciosMasReservados(servicioMock)),
+                () -> assertNotNull(visitor.visitorOcupacionYCupoDisponible(ocupacionMock)),
+                () -> assertNotNull(visitor.visitorExposicionDeProvedor(exposicionMock))
+        );
+    }
 }
 

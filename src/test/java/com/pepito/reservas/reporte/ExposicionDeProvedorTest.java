@@ -20,7 +20,6 @@ public class ExposicionDeProvedorTest {
 
     @Test
     public void testAceptarVisitorRetornaTextoEsperado() {
-        // Caso 1: Comportamiento estándar del visitor ante la exposición
         when(visitorMock.visitorExposicionDeProvedor(exposicion)).thenReturn("Reporte Exposición Proveedor: OK");
 
         String resultado = exposicion.aceptar(visitorMock);
@@ -32,7 +31,6 @@ public class ExposicionDeProvedorTest {
 
     @Test
     public void testAceptarVisitorConFormatoDetallado() {
-        // Caso 2: El visitor devuelve un formato detallado o con métricas
         when(visitorMock.visitorExposicionDeProvedor(exposicion)).thenReturn("DETALLE_PROVEEDOR_V2");
 
         String resultado = exposicion.aceptar(visitorMock);
@@ -43,7 +41,6 @@ public class ExposicionDeProvedorTest {
 
     @Test
     public void testAceptarVisitorConResultadoVacio() {
-        // Caso 3: El visitor retorna una cadena vacía (caso borde)
         when(visitorMock.visitorExposicionDeProvedor(exposicion)).thenReturn("");
 
         String resultado = exposicion.aceptar(visitorMock);
@@ -54,7 +51,6 @@ public class ExposicionDeProvedorTest {
 
     @Test
     public void testAceptarVisitorLanzaExcepcionInterna() {
-        // Caso 4: Manejo de errores si el visitor falla al procesar la exposición
         when(visitorMock.visitorExposicionDeProvedor(exposicion)).thenThrow(new RuntimeException("Error en visitor"));
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
@@ -66,12 +62,10 @@ public class ExposicionDeProvedorTest {
 
     @Test
     public void testAceptarVerificaInvocacionUnicaExacta() {
-        // Caso 5: Asegurar que se invoca exactamente una vez y no múltiples veces por error
         when(visitorMock.visitorExposicionDeProvedor(exposicion)).thenReturn("Unico");
 
         exposicion.aceptar(visitorMock);
 
-        // Verificamos que el método del visitor fue llamado exactamente una vez con esta instancia
         verify(visitorMock, times(1)).visitorExposicionDeProvedor(eq(exposicion));
     }
 }

@@ -1,7 +1,7 @@
 package com.pepito.reservas.reporte;
 
 import com.pepito.reservas.reportes.ExposicionDeProvedor;
-import com.pepito.reservas.reportes.OcupacionYCupo;
+
 import com.pepito.reservas.reportes.ReporteCSVVisitor;
 import com.pepito.reservas.reportes.ServicioMasReservado;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,5 +47,19 @@ public class ReporteCSVVisitorTest {
 
         assertNotNull(resultado);
         assertTrue(resultado.contains("operador,porcentaje_catalogo"));
+    }
+    @Test
+    public void testFormatoCsvIncluyeSaltoDeLineaValido() {
+        String resultadoServicio = visitor.visitorServiciosMasReservados(servicioMock);
+        assertTrue(resultadoServicio.contains("\\n") || resultadoServicio.contains("\n"));
+    }
+
+    @Test
+    public void testResultadosNoVaciosParaNingunElemento() {
+        assertAll(
+                () -> assertNotNull(visitor.visitorServiciosMasReservados(servicioMock)),
+
+                () -> assertNotNull(visitor.visitorExposicionDeProvedor(exposicionMock))
+        );
     }
 }

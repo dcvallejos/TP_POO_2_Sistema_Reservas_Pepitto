@@ -20,7 +20,6 @@ public class OcupacionYCupoTest {
 
     @Test
     public void testAceptarVisitorRetornaReporteValido() {
-        // Caso 1: Comportamiento estándar exitoso del visitor
         when(visitorMock.visitorOcupacionYCupoDisponible(ocupacionYCupo)).thenReturn("Reporte Ocupación y Cupo: 80% Ocupado");
 
         String resultado = ocupacionYCupo.aceptar(visitorMock);
@@ -32,7 +31,6 @@ public class OcupacionYCupoTest {
 
     @Test
     public void testAceptarVisitorConFormatoTextoPlano() {
-        // Caso 2: El visitor devuelve un texto plano específico
         when(visitorMock.visitorOcupacionYCupoDisponible(ocupacionYCupo)).thenReturn("OCUPACION_Y_CUPO_PLANO");
 
         String resultado = ocupacionYCupo.aceptar(visitorMock);
@@ -43,7 +41,6 @@ public class OcupacionYCupoTest {
 
     @Test
     public void testAceptarVisitorConResultadoVacio() {
-        // Caso 3: El visitor retorna una cadena vacía (caso borde)
         when(visitorMock.visitorOcupacionYCupoDisponible(ocupacionYCupo)).thenReturn("");
 
         String resultado = ocupacionYCupo.aceptar(visitorMock);
@@ -54,7 +51,6 @@ public class OcupacionYCupoTest {
 
     @Test
     public void testAceptarVisitorLanzaExcepcion() {
-        // Caso 4: Manejo de errores cuando falla la lógica del visitor
         when(visitorMock.visitorOcupacionYCupoDisponible(ocupacionYCupo)).thenThrow(new IllegalStateException("Error de cupo"));
 
         Exception exception = assertThrows(IllegalStateException.class, () -> {
@@ -66,7 +62,6 @@ public class OcupacionYCupoTest {
 
     @Test
     public void testAceptarVerificaInvocacionUnicaExacta() {
-        // Caso 5: Asegurar que se invoca exactamente una vez al elemento correcto
         when(visitorMock.visitorOcupacionYCupoDisponible(ocupacionYCupo)).thenReturn("OK");
 
         ocupacionYCupo.aceptar(visitorMock);

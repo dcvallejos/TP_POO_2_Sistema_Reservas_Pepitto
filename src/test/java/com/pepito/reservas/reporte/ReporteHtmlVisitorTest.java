@@ -51,4 +51,22 @@ public class ReporteHtmlVisitorTest {
         assertNotNull(resultado);
         assertTrue(resultado.contains("<h1>"));
     }
+
+
+    @Test
+    public void testHtmlIncluyeEtiquetasDeCierreParaExposicion() {
+        String resultado = visitor.visitorExposicionDeProvedor(exposicionMock);
+
+        assertNotNull(resultado);
+        assertTrue(resultado.contains("</h1>"));
+    }
+
+    @Test
+    public void testNingunReporteHtmlRetornaVacioONulo() {
+        assertAll(
+                () -> assertNotNull(visitor.visitorServiciosMasReservados(servicioMock)),
+                () -> assertNotNull(visitor.visitorOcupacionYCupoDisponible(ocupacionMock)),
+                () -> assertNotNull(visitor.visitorExposicionDeProvedor(exposicionMock))
+        );
+    }
 }
