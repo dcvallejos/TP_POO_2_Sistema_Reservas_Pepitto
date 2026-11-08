@@ -32,9 +32,9 @@ class ServicioTest {
     Ciudad paris;
 
     // Unico lugar donde se crean los objetos: si cambia un constructor, se toca aca.
-    private Destino continente(String nombre) {return new Destino(TipoGeografico.CONTINENTE, nombre);}
+    private Destino continente() {return new Destino(TipoGeografico.CONTINENTE, "Europa");}
     private Destino pais(String nombre) {return new Destino(TipoGeografico.PAIS, nombre);}
-    private Ciudad ciudad(String nombre) {return new Ciudad(TipoGeografico.CIUDAD, nombre);}
+    private Ciudad ciudad(String nombre) {return new Ciudad( nombre);}
 
     Double DELTA = 0.0001;
     @BeforeEach
@@ -46,7 +46,7 @@ class ServicioTest {
 
         italia = pais("Italia");
         francia = pais("Francia");
-        europa = continente("Europa");
+        europa = continente();
 
         europa.agregarDestino(italia);
         europa.agregarDestino(francia);
@@ -58,6 +58,7 @@ class ServicioTest {
 
         servicio_vuelo = new Servicio(
                 "Vuelo a Aruba",
+                "Descripción de prueba",
                 0.1,
                 new Disponibilidad(),
                 "123VUELO",
@@ -68,6 +69,7 @@ class ServicioTest {
 
         servicio_alojamiento = new Servicio(
                 "Hotel en Aruba",
+                "Descripción de prueba",
                 0.15,
                 new Disponibilidad(),
                 "123HOTEL",
@@ -78,6 +80,7 @@ class ServicioTest {
 
         servicio_vuelo_2 = new Servicio(
                 "Traslado a Yahib",
+                "Descripción de prueba",
                 0.05,
                 new Disponibilidad(),
                 "234VUELO",
@@ -88,6 +91,7 @@ class ServicioTest {
 
         servicio_auto = new Servicio(
                 "Alquiler de auto en Yahib",
+                "Descripción de prueba",
                 0.00,
                 new Disponibilidad(),
                 "123AUTO",
@@ -98,6 +102,7 @@ class ServicioTest {
 
         servicio_excursion = new Servicio(
                 "Excursion a tumbas de Sazagrev",
+                "Descripción de prueba",
                 0.2,
                 new Disponibilidad(),
                 "123TEMPLO",
@@ -133,6 +138,7 @@ class ServicioTest {
 
         Servicio servicio_excursion_invalid = new Servicio(
                 "Excursion a tumbas de Sazagrev Falso",
+                "Descripción de prueba",
                 0.2,
                 new Disponibilidad(),
                 "321TEMPLO",
@@ -149,6 +155,7 @@ class ServicioTest {
 
         Servicio servicio_excursion_invalid = new Servicio(
                 "Excursion a tumbas de Sazagrev Falso",
+                "Descripción de prueba",
                 0.2,
                 new Disponibilidad(),
                 "",
@@ -165,6 +172,7 @@ class ServicioTest {
 
         Servicio servicio_excursion_invalid = new Servicio(
                 "",
+                "Descripción de prueba",
                 0.2,
                 new Disponibilidad(),
                 "TEST",
@@ -181,6 +189,7 @@ class ServicioTest {
 
         Servicio servicio_excursion_invalid = new Servicio(
                 "Excursion a tumbas de Sazagrev Falso",
+                "Descripción de prueba",
                 0.2,
                 new Disponibilidad(),
                 "TEST",
@@ -195,32 +204,30 @@ class ServicioTest {
     @Test
     void servicio_con_error_creacion_precio_negativo() {
 
-        assertThrowsExactly(ServiceExceptions.ErrorCreacionServicio.class, () -> {
-            Servicio servicio_excursion_invalid = new Servicio(
-                    "Excursion a tumbas de Sazagrev Falso",
-                    0.2,
-                    new Disponibilidad(),
-                    "321TEMPLO",
-                    "UNWISE GUY TRAVEL AGENCY",
-                    Categoria.EXCURSION,
-                    -100.0, paris
-            );
-        });
+        assertThrowsExactly(ServiceExceptions.ErrorCreacionServicio.class, () -> new Servicio(
+                "Excursion a tumbas de Sazagrev Falso",
+                "Descripción de prueba",
+                0.2,
+                new Disponibilidad(),
+                "321TEMPLO",
+                "UNWISE GUY TRAVEL AGENCY",
+                Categoria.EXCURSION,
+                -100.0, paris
+        ));
     }
     @Test
     void servicio_con_error_creacion_descuento_mayor_a_1() {
 
-        assertThrowsExactly(ServiceExceptions.ErrorCreacionServicio.class, () -> {
-            Servicio servicio_excursion_invalid = new Servicio(
-                    "Excursion a tumbas de Sazagrev Falso",
-                    1.2,
-                    new Disponibilidad(),
-                    "321TEMPLO",
-                    "UNWISE GUY TRAVEL AGENCY",
-                    Categoria.EXCURSION,
-                    100.0, paris
-            );
-        });
+        assertThrowsExactly(ServiceExceptions.ErrorCreacionServicio.class, () -> new Servicio(
+                "Excursion a tumbas de Sazagrev Falso",
+                "Descripción de prueba",
+                1.2,
+                new Disponibilidad(),
+                "321TEMPLO",
+                "UNWISE GUY TRAVEL AGENCY",
+                Categoria.EXCURSION,
+                100.0, paris
+        ));
     }
 
     @Test
@@ -282,9 +289,7 @@ class ServicioTest {
         this.servicio_vuelo_2.agregarAtributo(puntuacionEstrella);
         assertEquals(1,this.servicio_vuelo_2.cantidadAtributos());
 
-        assertThrowsExactly(ServiceExceptions.MetodoInvalido.class, () -> {
-            this.servicio_vuelo_2.eliminarAtributo(inicioActividad);
-        });
+        assertThrowsExactly(ServiceExceptions.MetodoInvalido.class, () -> this.servicio_vuelo_2.eliminarAtributo(inicioActividad));
 
 
     }
@@ -292,23 +297,22 @@ class ServicioTest {
     @Test
     void servicio_con_error_creacion_descuento_negativo() {
 
-        assertThrowsExactly(ServiceExceptions.ErrorCreacionServicio.class, () -> {
-            new Servicio(
-                    "Excursion a tumbas de Sazagrev Falso",
-                    -0.1,
-                    new Disponibilidad(),
-                    "321TEMPLO",
-                    "UNWISE GUY TRAVEL AGENCY",
-                    Categoria.EXCURSION,
-                    100.0, paris
-            );
-        });
+        assertThrowsExactly(ServiceExceptions.ErrorCreacionServicio.class, () -> new Servicio(
+                "Excursion a tumbas de Sazagrev Falso",
+                "Descripción de prueba",
+                -0.1,
+                new Disponibilidad(),
+                "321TEMPLO",
+                "UNWISE GUY TRAVEL AGENCY",
+                Categoria.EXCURSION,
+                100.0, paris
+        ));
     }
 
     @Test
     void servicio_acepta_descuentos_limite_0_y_1() {
-        Servicio sinDescuento = new Servicio("Test", 0.0, new Disponibilidad(), "T1", "PROV", Categoria.EXCURSION, 10.0, paris);
-        Servicio descuentoTotal = new Servicio("Test", 1.0, new Disponibilidad(), "T2", "PROV", Categoria.EXCURSION, 10.0, paris);
+        Servicio sinDescuento = new Servicio("Test", "Descripción de prueba", 0.0, new Disponibilidad(), "T1", "PROV", Categoria.EXCURSION, 10.0, paris);
+        Servicio descuentoTotal = new Servicio("Test", "Descripción de prueba", 1.0, new Disponibilidad(), "T2", "PROV", Categoria.EXCURSION, 10.0, paris);
 
         assertEquals(10.0, sinDescuento.precioFinal(), DELTA);
         assertEquals(0.0, descuentoTotal.precioFinal(), DELTA);
@@ -318,6 +322,7 @@ class ServicioTest {
     void servicio_creado_con_constructor_completo_devuelve_precios() {
         Servicio servicio = new Servicio(
                 "Vuelo a Aruba",
+                "Descripción de prueba",
                 0.1,
                 new Disponibilidad(),
                 "123VUELO",
@@ -334,21 +339,21 @@ class ServicioTest {
 
 
     @Test
-    void servicio_cupo_disponible_se_puede_consultar() {
+    void servicio_libres_disponible_se_puede_consultar() {
         Periodo periodo = new Periodo(
                 LocalDate.of(2026, 2, 1),
                 LocalDate.of(2026, 2, 5)
         );
 
 
-        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
-        assertTrue(this.servicio_vuelo.disponibilidad().periodoDisponible(periodo,5 ));
+        servicio_vuelo.disponibilidad().agregarCupo(periodo,10);
+        assertTrue(this.servicio_vuelo.disponibilidad().disponible(periodo,5 ));
 
     }
 
 
     @Test
-    void servicio_cupo_menor_que_devuelve_false() {
+    void servicio_libres_menor_que_devuelve_false() {
         Periodo periodo = new Periodo(
                 LocalDate.of(2026, 2, 1),
                 LocalDate.of(2026, 2, 5)
@@ -356,64 +361,66 @@ class ServicioTest {
         LocalDate fechaConsulta = LocalDate.of(2026, 2, 2);
 
 
-        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
-        assertFalse(this.servicio_vuelo.disponibilidad().periodoDisponible(periodo,15 ));
-        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
+        servicio_vuelo.disponibilidad().agregarCupo(periodo,10);
+        assertFalse(this.servicio_vuelo.disponibilidad().disponible(periodo,15 ));
+        assertEquals(10,servicio_vuelo.disponibilidad().libres(fechaConsulta));
 
     }
 
     @Test
-    void servicio_reservado_sin_cupo_lanza_excepcion() {
+    void servicio_reservado_sin_libres_lanza_excepcion() {
         Periodo periodo = new Periodo(
                 LocalDate.of(2026, 2, 1),
                 LocalDate.of(2026, 2, 5)
         );
 
-        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
+        servicio_vuelo.disponibilidad().agregarCupo(periodo,10);
 
         assertThrows(
                 DisponibilidadException.PeriodoSinDisponibilidad.class,
-                () -> servicio_vuelo.disponibilidad().bloquearPeriodo(periodo, 11)
+                () -> servicio_vuelo.disponibilidad().bloquear(periodo, 11)
         );
 
     }
 
     @Test
-    void servicio_cupo_se_reserva_baja_cupo_disponible() {
+    void servicio_libres_se_reserva_baja_libres_disponible() {
         Periodo periodo = new Periodo(
                 LocalDate.of(2026, 2, 1),
                 LocalDate.of(2026, 2, 5)
         );
         LocalDate fechaConsulta = LocalDate.of(2026, 2, 1);
 
-        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
-        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
+        servicio_vuelo.disponibilidad().agregarCupo(periodo,10);
+        assertEquals(10,servicio_vuelo.disponibilidad().libres(fechaConsulta));
 
-        servicio_vuelo.disponibilidad().bloquearPeriodo(periodo, 5);
+        servicio_vuelo.disponibilidad().bloquear(periodo, 5);
 
-        assertEquals(5,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
+        assertEquals(5,servicio_vuelo.disponibilidad().libres(fechaConsulta));
 
     }
 
     @Test
-    void servicio_cupo_se_libera_sube_cupo_disponible() {
+    void servicio_aumenta_cupo_reserva_y_libera_retorna_libres_originales() {
         Periodo periodo = new Periodo(
                 LocalDate.of(2026, 2, 1),
                 LocalDate.of(2026, 2, 5)
         );
         LocalDate fechaConsulta = LocalDate.of(2026, 2, 1);
 
-        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
-        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
+        servicio_vuelo.disponibilidad().agregarCupo(periodo,10);
+        assertEquals(10,servicio_vuelo.disponibilidad().libres(fechaConsulta));
 
-        servicio_vuelo.disponibilidad().liberarPeriodo(periodo, 5);
+        servicio_vuelo.reservar(periodo, 5);
+        assertEquals(5,servicio_vuelo.disponibilidad().libres(fechaConsulta));
 
-        assertEquals(15,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
+        servicio_vuelo.disponibilidad().liberar(periodo, 5);
+        assertEquals(10,servicio_vuelo.disponibilidad().libres(fechaConsulta));
 
     }
 
     @Test
-    void servicio_cupo_se_libera_fecha_no_existente_lanza_excepcion() {
+    void servicio_libres_se_libera_fecha_no_existente_lanza_excepcion() {
         Periodo periodo = new Periodo(
                 LocalDate.of(2026, 2, 1),
                 LocalDate.of(2026, 2, 5)
@@ -424,19 +431,19 @@ class ServicioTest {
         );
         LocalDate fechaConsulta = LocalDate.of(2026, 2, 1);
 
-        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
-        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
+        servicio_vuelo.disponibilidad().agregarCupo(periodo,10);
+        assertEquals(10,servicio_vuelo.disponibilidad().libres(fechaConsulta));
 
         assertThrowsExactly(
                 DisponibilidadException.PeriodoSinDisponibilidad.class,
-                () -> servicio_vuelo.disponibilidad().liberarPeriodo(periodo2, 5)
+                () -> servicio_vuelo.disponibilidad().bloquear(periodo2, 5)
                 );
-        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
+        assertEquals(10,servicio_vuelo.disponibilidad().libres(fechaConsulta));
 
     }
 
     @Test
-    void servicio_cupo_con_una_fecha_sin_cupo_lanza_excepcion() {
+    void servicio_libres_con_una_fecha_sin_libres_lanza_excepcion() {
         Periodo periodo = new Periodo(
                 LocalDate.of(2026, 2, 1),
                 LocalDate.of(2026, 2, 5)
@@ -444,18 +451,18 @@ class ServicioTest {
 
         LocalDate fechaConsulta = LocalDate.of(2026, 2, 2);
 
-        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodo,10);
+        servicio_vuelo.disponibilidad().agregarCupo(periodo,10);
 
-        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
+        assertEquals(10,servicio_vuelo.disponibilidad().libres(fechaConsulta));
 
-        servicio_vuelo.disponibilidad().bloquearFecha(fechaConsulta,10);
+        servicio_vuelo.disponibilidad().bloquear(Periodo.dia(fechaConsulta),10);
 
         assertThrowsExactly(
-                DisponibilidadException.FechaSinDisponibilidad.class,
-                () -> servicio_vuelo.disponibilidad().bloquearFecha(fechaConsulta, 11)
+                DisponibilidadException.PeriodoSinDisponibilidad.class,
+                () -> servicio_vuelo.disponibilidad().bloquear(Periodo.dia(fechaConsulta), 11)
                 );
-        assertEquals(0,servicio_vuelo.disponibilidad().cupo(fechaConsulta));
-        assertEquals(10,servicio_vuelo.disponibilidad().cupo(fechaConsulta.minusDays(1)));
+        assertEquals(0,servicio_vuelo.disponibilidad().libres(fechaConsulta));
+        assertEquals(10,servicio_vuelo.disponibilidad().libres(fechaConsulta.minusDays(1)));
 
     }
 
@@ -463,38 +470,38 @@ class ServicioTest {
     LocalDate dia = LocalDate.of(2026, 2, 2);
 
     @Test
-    void servicio_disponible_por_fecha_respeta_el_cupo() {
-        servicio_vuelo.disponibilidad().agregarCupo(dia, 10);
+    void servicio_disponible_por_fecha_respeta_el_libres() {
+        servicio_vuelo.disponibilidad().agregarCupo(Periodo.dia(dia), 10);
 
-        assertTrue(servicio_vuelo.disponible(dia, 10));
-        assertFalse(servicio_vuelo.disponible(dia, 11));
+        assertTrue(servicio_vuelo.disponible(Periodo.dia(dia), 10));
+        assertFalse(servicio_vuelo.disponible(Periodo.dia(dia), 11));
     }
 
     @Test
-    void servicio_disponible_por_periodo_respeta_el_cupo() {
-        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodoFebrero, 10);
+    void servicio_disponible_por_periodo_respeta_el_libres() {
+        servicio_vuelo.disponibilidad().agregarCupo(periodoFebrero, 10);
 
         assertTrue(servicio_vuelo.disponible(periodoFebrero, 10));
         assertFalse(servicio_vuelo.disponible(periodoFebrero, 11));
     }
 
     @Test
-    void servicio_reservar_fecha_descuenta_cupo() {
-        servicio_vuelo.disponibilidad().agregarCupo(dia, 10);
+    void servicio_reservar_fecha_descuenta_libres() {
+        servicio_vuelo.disponibilidad().agregarCupo(Periodo.dia(dia), 10);
 
-        servicio_vuelo.reservar(dia, 4);
+        servicio_vuelo.reservar(Periodo.dia(dia), 4);
 
-        assertEquals(6, servicio_vuelo.disponibilidad().cupo(dia));
+        assertEquals(6, servicio_vuelo.disponibilidad().libres(dia));
     }
 
     @Test
-    void servicio_reservar_periodo_descuenta_cupo_de_cada_dia() {
-        servicio_vuelo.disponibilidad().agregarCupoMasivo(periodoFebrero, 10);
+    void servicio_reservar_periodo_descuenta_libres_de_cada_dia() {
+        servicio_vuelo.disponibilidad().agregarCupo(periodoFebrero, 10);
 
         servicio_vuelo.reservar(periodoFebrero, 4);
 
-        assertEquals(6, servicio_vuelo.disponibilidad().cupo(LocalDate.of(2026, 2, 1)));
-        assertEquals(6, servicio_vuelo.disponibilidad().cupo(LocalDate.of(2026, 2, 5)));
+        assertEquals(6, servicio_vuelo.disponibilidad().libres(LocalDate.of(2026, 2, 1)));
+        assertEquals(6, servicio_vuelo.disponibilidad().libres(LocalDate.of(2026, 2, 5)));
     }
     
     @Test
