@@ -1,24 +1,22 @@
 package com.pepito.reservas.catalogo;
 
-import com.pepito.reservas.catalogo.servicio.Disponibilidad;
 import com.pepito.reservas.catalogo.servicio.Periodo;
+import com.pepito.reservas.catalogo.servicio.Validador;
 import com.pepito.reservas.destino.LugarGeografico;
 import com.pepito.reservas.catalogo.servicio.Categoria;
-
-import java.time.LocalDate;
 
 public abstract class ItemCatalogo implements Validador {
 
     protected String nombre;
+    protected String descripcion;
     protected Double descuento;
-    protected Disponibilidad disponibilidad;
     protected LugarGeografico destino;
 
 
-    public ItemCatalogo(String nombre, Double descuento, Disponibilidad disponibilidad, LugarGeografico destino) {
+    public ItemCatalogo(String nombre, String descripcion, Double descuento, LugarGeografico destino) {
         this.nombre = nombre;
+        this.descripcion = descripcion;
         this.descuento = descuento;
-        this.disponibilidad = disponibilidad;
         this.destino = destino;
     }
 
@@ -26,14 +24,16 @@ public abstract class ItemCatalogo implements Validador {
     public abstract Double descuento();
     public abstract Double precioFinal();
     public abstract void reservar(Periodo fechas, Integer cantidad);
-    public abstract void reservar(LocalDate fecha, Integer cantidad);
     public abstract void liberar(Periodo fechas, Integer cantidad);
-    public abstract void liberar(LocalDate fecha, Integer cantidad);
-    public abstract Disponibilidad disponibilidad();
+    public abstract boolean liberable(Periodo fechas, Integer cantidad);
     public abstract Boolean perteneceA(Categoria categoria);
+    public abstract Boolean cubre(Periodo periodo);
+    public abstract boolean contiene(ItemCatalogo otro);
+    public abstract boolean comparteServicios(ItemCatalogo otro);
+    public abstract Boolean disponible(Periodo fechas, Integer cantidad);
 
     // Pre-implementados (comunes a todos)
-    public Boolean cubre(Periodo periodo) {return disponibilidad.cubre(periodo);}
     public String nombre(){return nombre;}
+    public String descripcion(){return descripcion;}
     public LugarGeografico getDestino() {return destino;}
 }
