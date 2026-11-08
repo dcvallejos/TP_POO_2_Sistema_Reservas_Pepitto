@@ -1,11 +1,11 @@
 package com.pepito.reservas.catalogo.servicio;
 
 import com.pepito.reservas.catalogo.ItemCatalogo;
+import com.pepito.reservas.excepciones.DisponibilidadException;
 import com.pepito.reservas.excepciones.ServiceExceptions;
 import com.pepito.reservas.catalogo.servicio.atributos.AtributoDinamico;
 import com.pepito.reservas.destino.LugarGeografico;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +14,13 @@ public class Servicio extends ItemCatalogo {
     String proveedor;
     Categoria categoria;
     Double precioBase;
-
+    Disponibilidad disponibilidad;
 
     List<AtributoDinamico> atributosAdicionales;
 
     public Servicio(
             String nombre,
+            String descripcion,
             Double descuento,
             Disponibilidad disponibilidad,
             String codigoReserva,
@@ -32,49 +33,58 @@ public class Servicio extends ItemCatalogo {
         if (precioBase < 0.0){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "PrecioBase no puede ser negativo");}
         if (descuento < 0.0 || descuento > 1.0 ){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");}
 
-        super(nombre, descuento, disponibilidad, destino);
+        super(nombre, descripcion, descuento, destino);
         this.codigoReserva = codigoReserva;
         this.proveedor = proveedor;
         this.categoria = categoria;
         this.precioBase = precioBase;
         this.atributosAdicionales = new ArrayList<>(List.of());
+        this.disponibilidad = disponibilidad;
     }
 
-    @Override
     public Disponibilidad disponibilidad() {
         return disponibilidad;
     }
-    
+
     @Override
     public Boolean perteneceA(Categoria categoria) {
         return this.categoria == categoria;
     }
 
-    public Boolean disponible(Periodo fechas, Integer cantidad) {
-        return disponibilidad.periodoDisponible(fechas, cantidad);
+    @Override
+    public Boolean cubre(Periodo periodo) {
+        return disponibilidad.cubre(periodo);
     }
 
     @Override
-    public Boolean disponible(LocalDate fecha, Integer cantidad) {
-        return disponibilidad.fechaDisponible(fecha, cantidad);
+    public Boolean disponible(Periodo fechas, Integer cantidad) {
+        return disponibilidad.disponible(fechas, cantidad);
     }
+
+    @Override
+    public boolean contiene(ItemCatalogo otro) { return this == otro; }
+
+    @Override
+    public boolean comparteServicios(ItemCatalogo otro) {
+        return otro.contiene(this);
+    }
+
     @Override
     public void reservar(Periodo fechas, Integer cantidad) {
-        disponibilidad.bloquearPeriodo(fechas, cantidad);
-    }
-    @Override
-    public void reservar(LocalDate fecha, Integer cantidad) {
-        disponibilidad.bloquearFecha(fecha, cantidad);
+        disponibilidad.bloquear(fechas, cantidad);
     }
 
+
+    @Override
+    public boolean liberable(Periodo fechas, Integer cantidad){
+        return disponibilidad.liberable(fechas,cantidad);
+    }
     @Override
     public void liberar(Periodo fechas, Integer cantidad) {
-        disponibilidad.liberarPeriodo(fechas, cantidad);
-    }
-
-    @Override
-    public void liberar(LocalDate fecha, Integer cantidad) {
-        disponibilidad.liberarFecha(fecha, cantidad);
+        if (liberable(fechas, cantidad))
+            disponibilidad.liberar(fechas, cantidad);
+        else
+            throw new DisponibilidadException.LiberacionInvalida(fechas,cantidad);
     }
 
     @Override
@@ -110,10 +120,12 @@ public class Servicio extends ItemCatalogo {
     @Override
     public Boolean validate() throws ServiceExceptions{
         if (
-                codigoReserva.isBlank()
-                || nombre.isBlank()
-                || proveedor.isBlank()
-                || precioBase == 0.0
+                    codigoReserva == null
+                ||  codigoReserva.isBlank()
+                ||  nombre == null
+                ||  nombre.isBlank()
+                ||  proveedor.isBlank()
+                ||  precioBase == 0.0
         )
         {
             return false;
