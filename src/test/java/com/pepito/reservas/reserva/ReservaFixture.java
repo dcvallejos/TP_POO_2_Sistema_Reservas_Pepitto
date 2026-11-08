@@ -2,7 +2,7 @@ package com.pepito.reservas.reserva;
 
 import com.pepito.reservas.catalogo.ItemCatalogo;
 import com.pepito.reservas.cliente.Cliente;
-import com.pepito.reservas.metodoDePago.ComprobantePago;
+import com.pepito.reservas.documento.VoucherTarjeta;
 import com.pepito.reservas.metodoDePago.MetodoDePago;
 
 import com.pepito.reservas.catalogo.servicio.Periodo;
@@ -49,7 +49,7 @@ final class ReservaFixture {
     /* Medio de pago que siempre acepta y devuelve un comprobante. */
     static MetodoDePago pago() {
         MetodoDePago pago = mock(MetodoDePago.class);
-        when(pago.procesarPago(anyDouble())).thenAnswer(inv -> new ComprobantePago("TX-1", inv.getArgument(0)));
+        when(pago.procesarPago(anyDouble())).thenAnswer(inv -> new VoucherTarjeta("TX-1", inv.getArgument(0)));
         return pago;
     }
 
