@@ -1,6 +1,7 @@
 package com.pepito.reservas.catalogo.busqueda;
 
 import com.pepito.reservas.catalogo.ItemCatalogo;
+import com.pepito.reservas.catalogo.servicio.Periodo;
 import com.pepito.reservas.destino.LugarGeografico;
 
 import java.time.LocalDate;
@@ -25,6 +26,6 @@ public class PorDisponibilidad implements CriterioBusqueda {
 
     @Override
     public boolean cumple(ItemCatalogo item) {
-        return this.destino.contiene(item.getDestino()) && item.disponible(this.fecha, 1);
+        return this.destino.contiene(item.getDestino()) && item.disponible(Periodo.dia(this.fecha), 1);
     }
 }
