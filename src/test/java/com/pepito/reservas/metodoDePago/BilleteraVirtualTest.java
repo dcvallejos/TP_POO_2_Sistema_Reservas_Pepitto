@@ -2,12 +2,17 @@ package com.pepito.reservas.metodoDePago;
 
 
 
-import com.pepito.reservas.reserva.Reserva;
+import com.pepito.reservas.documento.ComprobanteBilletera;
+import com.pepito.reservas.documento.ComprobantePago;
+import com.pepito.reservas.documento.NotificacionPush;
+import com.pepito.reservas.metodoDePago.api.ApiBilletera;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class BilleteraVirtualTest {
@@ -21,8 +26,6 @@ public class BilleteraVirtualTest {
         // 1. Creamos los mocks necesarios
         apiBilleteraMock = mock(ApiBilletera.class);
         comprobanteEsperado = mock(ComprobantePago.class);
-
-
 
         billeteraVirtual = new BilleteraVirtual(apiBilleteraMock);
     }
@@ -55,16 +58,26 @@ public class BilleteraVirtualTest {
     }
 
     @Test
-    public void testNotificarResultadoDelegaEnApi() {
+    public void testNotificarResultadoEnviaPush() {
+        when(apiBilleteraMock.ejecutar()).thenReturn("TX-1");
 
-        when(apiBilleteraMock.notificar()).thenReturn(comprobanteEsperado);
+        ComprobantePago comprobante = billeteraVirtual.procesarPago(100.0);
 
+        ArgumentCaptor<NotificacionPush> push = ArgumentCaptor.forClass(NotificacionPush.class);
+        verify(apiBilleteraMock, times(1)).notificar(push.capture());
+        assertTrue(comprobante.getCodigoTransaccion().contains("TX-1"));
+    }
 
+    @Test
+    public void testProcesarPagoGeneraComprobanteYRegistraCodigo() {
+        when(apiBilleteraMock.ejecutar()).thenReturn("TX-1");
 
-        ComprobantePago resultado = billeteraVirtual.notificarResultado(100.0);
+        ComprobantePago comprobante = billeteraVirtual.procesarPago(100.0);
 
-        assertEquals(comprobanteEsperado, resultado);
-        verify(apiBilleteraMock, times(1)).notificar();
+        assertInstanceOf(ComprobanteBilletera.class, comprobante);
+        assertEquals("TX-1", comprobante.getCodigoTransaccion());
+        assertEquals(100.0, comprobante.getMonto());
+        assertEquals(List.of(comprobante), billeteraVirtual.getComprobantesRegistrados());
     }
 }
 
