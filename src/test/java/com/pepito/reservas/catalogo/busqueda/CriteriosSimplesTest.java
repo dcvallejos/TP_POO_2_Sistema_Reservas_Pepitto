@@ -2,6 +2,7 @@ package com.pepito.reservas.catalogo.busqueda;
 
 import com.pepito.reservas.catalogo.ItemCatalogo;
 import com.pepito.reservas.catalogo.servicio.Categoria;
+import com.pepito.reservas.catalogo.servicio.Periodo;
 import com.pepito.reservas.destino.Ciudad;
 import com.pepito.reservas.destino.Destino;
 import com.pepito.reservas.destino.TipoGeografico;
@@ -20,8 +21,8 @@ import static org.mockito.Mockito.when;
 
 class CriteriosSimplesTest {
 
-    private static final Ciudad MADRID = new Ciudad(TipoGeografico.CIUDAD, "Madrid");
-    private static final Ciudad ROMA = new Ciudad(TipoGeografico.CIUDAD, "Roma");
+    private static final Ciudad MADRID = new Ciudad( "Madrid");
+    private static final Ciudad ROMA = new Ciudad("Roma");
     private static final LocalDate DIA_23 = LocalDate.of(2026, 10, 23);
 
     private ItemCatalogo itemLlamado(String nombre) {
@@ -89,7 +90,7 @@ class CriteriosSimplesTest {
     private ItemCatalogo itemEn(Ciudad ciudad, boolean conCupoElDia23) {
         ItemCatalogo item = mock(ItemCatalogo.class);
         when(item.getDestino()).thenReturn(ciudad);
-        when(item.disponible(DIA_23, 1)).thenReturn(conCupoElDia23);
+        when(item.disponible(Periodo.dia(DIA_23), 1)).thenReturn(conCupoElDia23);
         return item;
     }
 
