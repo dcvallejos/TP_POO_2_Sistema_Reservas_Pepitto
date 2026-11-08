@@ -2,7 +2,8 @@ package com.pepito.reservas.destino;
 
 public class Ciudad extends LugarGeografico{
 
-    public Ciudad(TipoGeografico ciudad, String nombre) {
+
+    public Ciudad(String nombre) {
         super(TipoGeografico.CIUDAD, nombre);
     }
 
@@ -14,5 +15,10 @@ public class Ciudad extends LugarGeografico{
     @Override
     public Boolean puedeContener(LugarGeografico otro) {
         return false;
+    }
+
+    @Override
+    public void removerDestino(LugarGeografico lugar, Boolean override) {
+        throw new DestinoException.InexistenciaDestino(lugar);
     }
 }

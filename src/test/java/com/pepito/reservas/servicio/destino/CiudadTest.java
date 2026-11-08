@@ -14,8 +14,8 @@ class LocacionTest {
 
     @BeforeEach
     void setUp() {
-        roma = new Ciudad(TipoGeografico.CIUDAD, "Roma");
-        paris = new Ciudad(TipoGeografico.CIUDAD, "Paris");
+        roma = new Ciudad( "Roma");
+        paris = new Ciudad( "Paris");
     }
 
     @Test
