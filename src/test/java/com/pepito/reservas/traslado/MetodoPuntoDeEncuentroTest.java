@@ -1,27 +1,29 @@
 package com.pepito.reservas.traslado;
 
 import com.pepito.reservas.reserva.Reserva;
-import com.pepito.reservas.traslado.MetodoPuntoDeEncuentro;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MetodoPuntoDeEncuentroTest {
 
     private Reserva reservaMock;
+    private DisponibilidadGuias disponibilidadGuias;
 
     @BeforeEach
     public void setUp() {
         // Creamos el mock de la reserva
         reservaMock = mock(Reserva.class);
+        disponibilidadGuias = mock(DisponibilidadGuias.class);
     }
 
     @Test
     public void testCostoConDisponibilidadDeGuiasRetornaCero() {
         // 1. Instanciamos pasando true (hay cupo)
-        MetodoPuntoDeEncuentro metodo = new MetodoPuntoDeEncuentro(true);
+        MetodoPuntoDeEncuentro metodo = new MetodoPuntoDeEncuentro(disponibilidadGuias);
 
         // 2. Ejecutamos el costo y verificamos que devuelva 0.0 sin romper
         Double costo = metodo.costo(reservaMock);
@@ -30,14 +32,15 @@ public class MetodoPuntoDeEncuentroTest {
 
     @Test
     public void testConGuiasDisponiblesNoLanzaExcepcion() {
-        MetodoPuntoDeEncuentro metodo = new MetodoPuntoDeEncuentro(true);
+        when(disponibilidadGuias.guiasDisponibles()).thenReturn(true);
+        MetodoPuntoDeEncuentro metodo = new MetodoPuntoDeEncuentro(disponibilidadGuias);
 
         assertDoesNotThrow(() -> metodo.verificarDisponibilidad());
     }
 
     @Test
     public void testSinGuiasDisponiblesLanzaTrasladoNoDisponible() {
-        MetodoPuntoDeEncuentro metodo = new MetodoPuntoDeEncuentro(false);
+        MetodoPuntoDeEncuentro metodo = new MetodoPuntoDeEncuentro(disponibilidadGuias);
 
         assertThrows(TrasladoNoDisponibleException.class, () -> metodo.verificarDisponibilidad());
     }
