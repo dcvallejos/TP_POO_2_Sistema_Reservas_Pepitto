@@ -3,8 +3,9 @@ package com.pepito.reservas.reserva;
 import com.pepito.reservas.catalogo.ItemCatalogo;
 import com.pepito.reservas.catalogo.servicio.Periodo;
 import com.pepito.reservas.cliente.Cliente;
+import com.pepito.reservas.documento.VoucherCredito;
 import com.pepito.reservas.excepciones.DisponibilidadException;
-import com.pepito.reservas.metodoDePago.ComprobantePago;
+import com.pepito.reservas.documento.ComprobantePago;
 import com.pepito.reservas.metodoDePago.MetodoDePago;
 import com.pepito.reservas.metodoDePago.PagoRechazadoException;
 import com.pepito.reservas.reserva.suscriptor.ReservaObserver;
@@ -107,18 +108,19 @@ public class Reserva implements OperacionesReserva {
         this.estado = nuevoEstado;
         this.notificar(estadoAnterior, nuevoEstado);
     }
- 
-    public void agregarObservador(ReservaObserver observador) {
+
+    void agregarObservador(ReservaObserver observador) {
         this.observadores.add(observador);
     }
- 
-    public void quitarObservador(ReservaObserver observador) {
+
+    void quitarObservador(ReservaObserver observador) {
         this.observadores.remove(observador);
     }
 
+    /* Se recorre una copia: un observer puede desuscribirse mientras se le notifica. */
     private void notificar(EstadoReserva anterior, EstadoReserva nuevo) {
         new ArrayList<>(this.observadores)
-                .forEach(o -> o.cambioDeEstado(this, anterior, nuevo));
+                .forEach(o -> o.update(this, anterior, nuevo));
     }
 
     /* Efectos causados por los Estados. La Reserva saber HACER, el Estado CUANDO */
@@ -196,13 +198,15 @@ public class Reserva implements OperacionesReserva {
     }
 
     void generarVoucherReembolsoTotal() {
-        double monto = this.cobroRealizado().total();
-        this.registrarVoucher(new VoucherCredito(monto, "Cancelación antes del viaje: reembolso de servicios y tasas"));
+        Double monto = this.cobroRealizado().total();
+        this.registrarVoucher(
+                new VoucherCredito( monto,"Cancelación antes del viaje: reembolso de servicios y tasas"));
     }
  
     void generarVoucherReembolsoParcial() {
         double monto = this.getTotalServiciosNoDisfrutados();
-        this.registrarVoucher(new VoucherCredito(monto, "Cancelación en curso: reembolso de servicios no disfrutados"));
+        this.registrarVoucher(
+                new VoucherCredito(  monto,"Cancelación en curso: reembolso de servicios no disfrutados"));
     }
  
     void registrarVoucher(VoucherCredito voucher) {
@@ -275,5 +279,5 @@ public class Reserva implements OperacionesReserva {
     public Optional<MetodoTraslado> getMetodoTraslado() {
         return this.metodoTraslado;
     }
-    
+
 }
