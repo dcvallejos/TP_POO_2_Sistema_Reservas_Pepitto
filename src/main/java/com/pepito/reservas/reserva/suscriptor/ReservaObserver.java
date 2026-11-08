@@ -9,6 +9,6 @@ import com.pepito.reservas.reserva.Reserva;
 
 public interface ReservaObserver {
 
-    public void cambioDeEstado(Reserva reserva, EstadoReserva anterior, EstadoReserva nuevo);
+    void update(Reserva reserva, EstadoReserva anterior, EstadoReserva nuevo);
 
 }
