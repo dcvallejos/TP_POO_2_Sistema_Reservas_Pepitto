@@ -24,4 +24,12 @@ public abstract class CatalogoException extends RuntimeException {
 
         }
     }
+
+    public static class ErrorCiclico extends CatalogoException{
+        public ErrorCiclico (ItemCatalogo item){
+            super(item.nombre() + " no puede agregarse al catálogo debido a que no puede contenerse a sí mismo");
+
+        }
+    }
+
 }
