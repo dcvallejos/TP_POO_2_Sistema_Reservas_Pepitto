@@ -1,37 +1,38 @@
 package com.pepito.reservas.metodoDePago;
 
 
+import com.pepito.reservas.documento.ComprobantePago;
+import com.pepito.reservas.documento.VoucherTarjeta;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VoucherTest {
 
     @Test
     public void testCreacionYObtencionDeNroId() {
 
-        int idEsperado = 12345;
-        Voucher voucher = new Voucher(idEsperado);
+        String idEsperado = "12345";
+        VoucherTarjeta voucher = new VoucherTarjeta(idEsperado,200.0);
 
-        assertEquals(idEsperado, voucher.getNroId());
+        assertEquals(idEsperado, voucher.getCodigoTransaccion());
     }
 
     @Test
     public void testCreacionConIdCeroONegativo() {
 
-        Voucher voucherCero = new Voucher(0);
-        assertEquals(0, voucherCero.getNroId());
+        VoucherTarjeta voucherCero = new VoucherTarjeta("0",0.0);
+        assertEquals("0", voucherCero.getCodigoTransaccion());
 
-        Voucher voucherNegativo = new Voucher(-99);
-        assertEquals(-99, voucherNegativo.getNroId());
+        VoucherTarjeta voucherNegativo = new VoucherTarjeta("-99",0.0);
+        assertEquals("-99", voucherNegativo.getCodigoTransaccion());
     }
 
     @Test
     public void testHerenciaDeComprobante() {
 
-        Voucher voucher = new Voucher(1);
+        VoucherTarjeta voucher = new VoucherTarjeta("1",0.0);
 
-        assertTrue(voucher instanceof ComprobantePago);
+        assertInstanceOf(ComprobantePago.class,  voucher);
     }
 }
