@@ -3,28 +3,14 @@ package com.pepito.reservas.catalogo.servicio;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
-public class Periodo {
+    public record Periodo(LocalDate fechaDesde, LocalDate fechaHasta){
+        public Periodo{
+            if (fechaHasta.isBefore(fechaDesde)) throw new PeriodoException.PeriodoInvalido();
+        }
 
-    LocalDate fechaDesde;
-    LocalDate fechaHasta;
+        public static Periodo dia(LocalDate fecha){ return new Periodo(fecha,fecha);}
 
-
-    public Periodo(LocalDate fechaDesde, LocalDate fechaHasta){
-        this.fechaDesde = fechaDesde;
-        this.fechaHasta = fechaHasta;
-    }
-
-    public LocalDate fechaDesde() {
-        return fechaDesde;
-    }
-
-    public LocalDate fechaHasta() {
-        return fechaHasta;
-    }
-
-    public Stream<LocalDate> getSetPeriodo(Periodo fechas) {
-        return fechas.fechaDesde.datesUntil(fechas.fechaHasta().plusDays(1));
+        public Stream<LocalDate> dias() {return fechaDesde.datesUntil(fechaHasta.plusDays(1));}
     }
 
 
-}
