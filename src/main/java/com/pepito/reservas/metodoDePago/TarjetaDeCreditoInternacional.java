@@ -1,15 +1,19 @@
 package com.pepito.reservas.metodoDePago;
 
+import com.pepito.reservas.documento.ComprobantePago;
+import com.pepito.reservas.documento.VoucherTarjeta;
+import com.pepito.reservas.metodoDePago.api.ApiTarjetaDeCredito;
+
 import java.time.LocalDate;
 
-public class TarjetaDeCreditoInternacional  extends MetodoDePago{
-    private ApiTarjetaDeCredito  apiTarjetaDeCredito;
-    private int nroTarjeta ;
-    private int cvv;
-    private LocalDate fechaDeVencimiento;
+public class TarjetaDeCreditoInternacional extends MetodoDePago{
+    private final ApiTarjetaDeCredito apiTarjetaDeCredito;
+    private final String nroTarjeta ;
+    private final int cvv;
+    private final LocalDate fechaDeVencimiento;
 
-
-    public TarjetaDeCreditoInternacional(int nroTarjeta ,int cvv , LocalDate fechaDeVencimiento ,ApiTarjetaDeCredito apiTarjetaDeCredito) {
+    public TarjetaDeCreditoInternacional(String nroTarjeta ,int cvv , LocalDate fechaDeVencimiento ,
+                                         ApiTarjetaDeCredito apiTarjetaDeCredito) {
         this.apiTarjetaDeCredito= apiTarjetaDeCredito;
         this.cvv = cvv;
         this.fechaDeVencimiento = fechaDeVencimiento;
@@ -24,18 +28,16 @@ public class TarjetaDeCreditoInternacional  extends MetodoDePago{
     @Override
     protected void reservarFondos() {
         apiTarjetaDeCredito.reservar();
-
-    }
-
-
-    @Override
-    protected void ejecutarTransaccion() {
-        apiTarjetaDeCredito.ejecutar();
     }
 
     @Override
-    protected   ComprobantePago notificarResultado(Double monto ) {
-        return  new Voucher  (cvv );
+    protected String ejecutarTransaccion() {
+        return apiTarjetaDeCredito.ejecutar();
+    }
+
+    @Override
+    protected ComprobantePago generarComprobante(Double monto, String codigoTransaccion) {
+        return  new VoucherTarjeta(codigoTransaccion, monto);
     }
 
 }

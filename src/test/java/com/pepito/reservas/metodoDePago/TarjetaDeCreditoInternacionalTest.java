@@ -1,11 +1,13 @@
 package com.pepito.reservas.metodoDePago;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 
+import com.pepito.reservas.documento.ComprobantePago;
+import com.pepito.reservas.documento.VoucherTarjeta;
+import com.pepito.reservas.metodoDePago.api.ApiTarjetaDeCredito;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +25,7 @@ public class TarjetaDeCreditoInternacionalTest {
         LocalDate fechaVencimiento = LocalDate.of(2018, 12, 9);
 
         // 2. Instanciamos la clase a testear pasándole el mock y datos de prueba
-        tarjetaPago = new TarjetaDeCreditoInternacional(123456, 123, fechaVencimiento, apiMock);
+        tarjetaPago = new TarjetaDeCreditoInternacional("123456", 123, fechaVencimiento, apiMock);
     }
 
     @Test
@@ -32,7 +34,7 @@ public class TarjetaDeCreditoInternacionalTest {
 
 
         verify(apiMock, times(1)).validar(
-                eq(123456),
+                eq("123456"),
                 eq(123),
                 eq(LocalDate.of(2018, 12, 9))
         );
@@ -59,11 +61,13 @@ public class TarjetaDeCreditoInternacionalTest {
     @Test
     public void testNotificarResultadoGeneraVoucherYLoRegistraEnReserva() {
 
-        ComprobantePago resultado = tarjetaPago.notificarResultado(100.0);
+        String codigoTransaccion = "";
+        when(apiMock.ejecutar()).thenReturn(codigoTransaccion);
 
+        ComprobantePago resultado = tarjetaPago.generarComprobante(100.0,codigoTransaccion);
 
         assertNotNull(resultado);
-        assertTrue(resultado instanceof Voucher);
+        assertInstanceOf(VoucherTarjeta.class, resultado);
 
 
     }
