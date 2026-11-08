@@ -3,7 +3,7 @@ package com.pepito.reservas.traslado;
 import com.pepito.reservas.reserva.Reserva;
 
 public class MetodoTrasladoEstandar extends   MetodoTraslado{
-    private  PlataformaTransporte plataformaTransporte ;
+    private final PlataformaTransporte plataformaTransporte ;
     private final Direccion direccionDestino;
 
     public MetodoTrasladoEstandar(PlataformaTransporte plataformaTransporte,Direccion direccionDestino){

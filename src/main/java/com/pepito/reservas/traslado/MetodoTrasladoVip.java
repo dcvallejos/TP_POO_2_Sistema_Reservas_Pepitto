@@ -3,7 +3,7 @@ package com.pepito.reservas.traslado;
 import com.pepito.reservas.reserva.Reserva;
 
 public class MetodoTrasladoVip  extends   MetodoTraslado{
-    private TrasladoVip trasladoVip;
+    private final TrasladoVip trasladoVip;
 
 
     public MetodoTrasladoVip(TrasladoVip trasladoVip){
