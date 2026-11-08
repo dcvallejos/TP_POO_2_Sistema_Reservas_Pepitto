@@ -14,7 +14,7 @@ public class Destino extends LugarGeografico {
 
     public Destino(TipoGeografico tipo, String nombre, ArrayList<LugarGeografico> destinos) {
         super(tipo, nombre);
-        this.destinos = destinos;
+        this.destinos = new ArrayList<>(List.copyOf(destinos));
     }
 
     @Override
@@ -38,33 +38,21 @@ public class Destino extends LugarGeografico {
             this.destinos.add(lugar);
     }
 
-    public void removerDestino(LugarGeografico lugar, Boolean override){
-
-        if(this.destinos.remove(lugar)){
+    @Override
+    public void removerDestino(LugarGeografico lugar, Boolean override) {
+        if (this.destinos.remove(lugar)) {
             return;
         }
-
-        if(lugar == this || !contiene(lugar)){
+        if (lugar == this || !this.contiene(lugar)) {
             throw new DestinoException.InexistenciaDestino(lugar);
         }
-
-        if(!override){
+        if (!override) {
             throw new DestinoException.ViolacionRango(lugar);
-
         }
-
-        // Metodo de remocion de objetos recursivo
-        try {
-            this.destinos.stream()
-                    .filter(destino -> destino.contiene(lugar))
-                    .map(destino -> (Destino) destino)
-                    .findFirst()
-                    .orElseThrow()
-                    .removerDestino(lugar, true);
-        }
-        catch (Exception e){
-            throw new DestinoException.InexistenciaDestino(lugar);
-
-        }
+        this.destinos.stream()
+                .filter(destino -> destino.contiene(lugar))
+                .findFirst()
+                .orElseThrow(() -> new DestinoException.InexistenciaDestino(lugar))
+                .removerDestino(lugar, true);
     }
 }
