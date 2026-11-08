@@ -2,6 +2,7 @@ package com.pepito.reservas.reserva;
 
 import com.pepito.reservas.catalogo.ItemCatalogo;
 import com.pepito.reservas.catalogo.servicio.Periodo;
+import com.pepito.reservas.documento.VoucherCredito;
 import com.pepito.reservas.excepciones.DisponibilidadException;
 import com.pepito.reservas.cliente.Cliente;
 import com.pepito.reservas.metodoDePago.MetodoDePago;
@@ -43,8 +44,6 @@ class ReservaEfectosTest {
     private static List<ItemCatalogo> itemsDe(Reserva reserva) {
         return reserva.getItems().stream().map(ItemReservado::getItem).toList();
     }
-
-    /* Ítems (solo en SOLICITUD_PENDIENTE) */
 
     @Test
     void enSolicitudPendienteSePuedenAgregarYQuitarItems() {
@@ -91,8 +90,6 @@ class ReservaEfectosTest {
 
         assertThrows(UnsupportedOperationException.class, () -> reserva.getItems().add(null));
     }
-
-    /* Cupos */
 
     @Test
     void confirmarBloqueaElCupoDeCadaItem() {
@@ -169,8 +166,6 @@ class ReservaEfectosTest {
         verify(reserva, never()).liberarCupos();
     }
 
-    /* Pago */
-
     private Reserva reservaConItemsYTraslado(double tasas) {
         Reserva reserva = nueva();
         reserva.agregarItem(item(1000), PERIODO);
@@ -239,8 +234,6 @@ class ReservaEfectosTest {
 
         assertEquals(NombreEstado.CONFIRMADA, reserva.getEstado().getNombre());
     }
-
-    /* Traslado y tasas */
 
     @Test
     void sinTrasladoElegidoLasTasasSonCero() {
@@ -324,7 +317,7 @@ class ReservaEfectosTest {
     @Test
     void sePuedeRegistrarUnVoucherDirectamente() {
         Reserva reserva = nueva();
-        VoucherCredito voucher = new VoucherCredito(99, "ajuste manual");
+        VoucherCredito voucher = new VoucherCredito(99.0, "ajuste manual");
 
         reserva.registrarVoucher(voucher);
 
@@ -338,7 +331,7 @@ class ReservaEfectosTest {
         Reserva reserva = nueva();
 
         assertThrows(UnsupportedOperationException.class,
-                () -> reserva.getVouchers().add(new VoucherCredito(1, "x")));
+                () -> reserva.getVouchers().add(new VoucherCredito(1.0, "x")));
     }
 
     /* Reserva vacía */
@@ -357,7 +350,7 @@ class ReservaEfectosTest {
     @Test
     void unaReservaConUnItemDePrecioCeroSePuedeConfirmar() {
         Reserva reserva = nueva();
-        reserva.agregarItem(item(0), PERIODO);
+        reserva.agregarItem(item(0.0), PERIODO);
 
         reserva.confirmar(pago());
 
