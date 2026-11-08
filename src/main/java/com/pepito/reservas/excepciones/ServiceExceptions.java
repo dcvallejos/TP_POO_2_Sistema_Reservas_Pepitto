@@ -18,15 +18,14 @@ public abstract class ServiceExceptions extends RuntimeException {
         }
     }
 
-    public static class ErrorValidacion extends ServiceExceptions {
-        public ErrorValidacion(String item, String message) {
-            super("Error de validación del servicio : " + item + ": " + message);
-        }
-    }
-
     public static class MetodoInvalido extends ServiceExceptions {
         public MetodoInvalido(String metodo, String message) {
             super("Error de validación del método : " + metodo + ": " + message);
+        }
+    }
+    public static class CupoInvalido extends ServiceExceptions {
+        public CupoInvalido(Integer cupo) {
+            super("Ingresó un cupo inválido: " + cupo.toString());
         }
     }
 
