@@ -23,9 +23,11 @@ public class AtributoDinamico implements Validador {
 
     @Override
     public Boolean validate() {
-        return      obligatorio
-                &&  valor != null
-                &&  tipo.acepta(valor)
-                ;
+        if (valor != null){
+            return tipo.acepta(valor);
+        }
+        else{
+            return !obligatorio;
+        }
     }
 }
