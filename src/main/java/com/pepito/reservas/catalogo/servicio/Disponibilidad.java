@@ -1,130 +1,82 @@
 package com.pepito.reservas.catalogo.servicio;
 
 import com.pepito.reservas.excepciones.DisponibilidadException;
-import com.pepito.reservas.excepciones.ServiceExceptions;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
+/*
+ * Cupos de un servicio por fecha.
+ * Separa CAPACIDAD (lo que el negocio ofrece) de RESERVADOS (lo que tomaron las reservas):
+ *  - agregarCupo amplía la oferta (sube la capacidad).
+ *  - bloquear / liberar mueven reservados; liberar nunca puede devolver más de lo reservado.
+ * Libres = capacidad - reservados. Tener ambos números es lo que permite el reporte de ocupación
+ *  * Bloquear y liberar son atómicos: primero verifican todo el período y recién después modifican.
+ */
 public class Disponibilidad {
 
-    HashMap<LocalDate, Integer> disponibilidad;
+    private final Map<LocalDate, Integer> capacidad = new HashMap<>();
+    private final Map<LocalDate, Integer> reservados = new HashMap<>();
 
     public Disponibilidad() {
-        this.disponibilidad = new HashMap<>();
     }
 
-    public Disponibilidad(Periodo periodo, Integer disponibilidad) {
-        this.disponibilidad = new HashMap<>();
-
-        this.agregarCupoMasivo(periodo, disponibilidad);
+    public Disponibilidad(Periodo periodo, int cupos) {
+        this.agregarCupo(periodo, cupos);
     }
 
-    public Periodo periodo() {
-        return new Periodo(fechaInicio(), fechaFin());
+    /* El negocio amplía su oferta: suma capacidad en cada día del período. */
+    public void agregarCupo(Periodo periodo, int cupos) {
+        this.validarCantidad(cupos);
+        periodo.dias().forEach(fecha -> this.capacidad.merge(fecha, cupos, Integer::sum));
     }
 
-    public Boolean cubre(Periodo periodo) {
-        if (sinFechas()) {
-            return false;
+    public void bloquear(Periodo periodo, int cantidad) {
+        this.validarCantidad(cantidad);
+        if (!this.disponible(periodo, cantidad)) {
+            throw new DisponibilidadException.PeriodoSinDisponibilidad(periodo);
         }
-        return !fechaInicio().isBefore(periodo.fechaDesde())
-                && !fechaFin().isAfter(periodo.fechaHasta());
+        periodo.dias().forEach(fecha -> this.reservados.merge(fecha, cantidad, Integer::sum));
     }
 
-    public LocalDate fechaInicio() {
-        return disponibilidad.keySet().stream()
-                .min(Comparator.naturalOrder())
-                .orElseThrow(() -> new ServiceExceptions.MetodoInvalido(
-                        "fechaInicio", "No hay fechas disponibles"));
-    }
-
-    public LocalDate fechaFin() {
-        return disponibilidad.keySet().stream()
-                .max(Comparator.naturalOrder())
-                .orElseThrow(() -> new ServiceExceptions.MetodoInvalido(
-                        "fechaFin", "No hay fechas disponibles"));
-    }
-
-    public void agregarCupoMasivo(Periodo fechas, Integer cupo){
-        // Agrega un cupo determinado durante un período, agregándose el mismo todos los días
-        // desde inicio a fin.
-        fechas.getSetPeriodo(fechas).forEach(fecha -> agregarCupo(fecha, cupo));
-    }
-
-    public void agregarCupo(LocalDate fecha, Integer cupos){
-        // Agrega un cupo a una fecha especifica dentro del map
-        // En caso de que ya exista una key fecha dentro del hashmap, se agrega el cupo a la disponibilidad
-        // Sn caso de que NO exista, se agrega la fecha en el HashMap con el cupo pasado por parámetro
-
-        this.disponibilidad.compute(fecha, (k, cuposActuales) ->
-                (cuposActuales == null) ? cupos : cuposActuales + cupos);
-
-    }
-
-    public Boolean sinFechas() {
-        return disponibilidad.isEmpty();
-    }
-
-    public void liberarFecha(LocalDate fecha, Integer cupos){
-        if(!disponibilidad.containsKey(fecha)){
-            throw new DisponibilidadException.FechaSinDisponibilidad(fecha);
+    public void liberar(Periodo periodo, int cantidad) {
+        this.validarCantidad(cantidad);
+        if (!this.liberable(periodo, cantidad)) {
+            throw new DisponibilidadException.LiberacionInvalida(periodo, cantidad);
         }
-        agregarCupo(fecha, cupos);
+        periodo.dias().forEach(fecha -> this.reservados.merge(fecha, -cantidad, Integer::sum));
     }
 
-    public void liberarPeriodo(Periodo fechas, Integer cantidad){
-        try {
-            fechas.getSetPeriodo(fechas).forEach(fecha -> liberarFecha(fecha, cantidad));
-        }
-        catch (Exception e) {
-            throw new DisponibilidadException.PeriodoSinDisponibilidad(fechas);
-        }
-
+    public boolean liberable(Periodo periodo, int cantidad) {
+        return periodo.dias().allMatch(fecha -> this.reservados(fecha) >= cantidad);
     }
 
-    public void bloquearPeriodo(Periodo fechas, Integer cantidad){
-
-        if(periodoDisponible(fechas, cantidad)){
-            fechas.getSetPeriodo(fechas)
-                    .forEach(fecha -> bloquearFecha(fecha,cantidad));
-
-        }
-        else {
-            throw new DisponibilidadException.PeriodoSinDisponibilidad(fechas);
-        }
+    /* Hay al menos 'cantidad' cupos libres en TODOS los días del período. */
+    public boolean disponible(Periodo periodo, int cantidad) {
+        return periodo.dias().allMatch(fecha -> this.libres(fecha) >= cantidad);
     }
 
-    public void bloquearFecha(LocalDate fecha, Integer cupos){
-        // Decrementa un cupo a una fecha especifica dentro del map
-        // Sn caso de que NO exista, se agrega la fecha en el HashMap con el cupo pasado por parámetro
+    /* El servicio opera todos los días del período (aunque estén llenos). Detecta huecos, no solo extremos. */
+    public boolean cubre(Periodo periodo) {
+        return periodo.dias().allMatch(this.capacidad::containsKey);
+    }
 
-        if(fechaDisponible(fecha,cupos)){
-            this.disponibilidad.compute(fecha, (k, cuposActuales) -> cuposActuales - cupos);
+    public int capacidad(LocalDate fecha) {
+        return this.capacidad.getOrDefault(fecha, 0);
+    }
+
+    public int reservados(LocalDate fecha) {
+        return this.reservados.getOrDefault(fecha, 0);
+    }
+
+    public int libres(LocalDate fecha) {
+        return this.capacidad(fecha) - this.reservados(fecha);
+    }
+
+    private void validarCantidad(int cantidad) {
+        if (cantidad <= 0) {
+            throw new DisponibilidadException.CantidadInvalida(cantidad);
         }
-        else{
-            throw new DisponibilidadException.FechaSinDisponibilidad(fecha);
-        }
-    }
-
-    public Boolean periodoDisponible(Periodo fechas, Integer cantidad){
-        return fechas.fechaDesde()
-                .datesUntil(
-                        fechas.fechaHasta().plusDays(1)
-                        // Se obtiene una lista de todas las fechas que se comprenden hasta la final inclusive
-
-                ).allMatch(localDate -> fechaDisponible(localDate, cantidad));
-        // Se obtiene un bool resultante de verificar que todas las fechas obtenidas tengan cupo
-    }
-
-
-    public Boolean fechaDisponible(LocalDate fecha, Integer cantidad){
-        Integer cupoActual = cupo(fecha);
-        return disponibilidad.containsKey(fecha) && cupoActual != null && cupoActual >= cantidad;
-    }
-
-    public Integer cupo(LocalDate fecha){
-        return disponibilidad.getOrDefault(fecha,0);
     }
 }
