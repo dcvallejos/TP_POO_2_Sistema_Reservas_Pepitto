@@ -14,4 +14,5 @@ public abstract class LugarGeografico {
     public TipoGeografico tipo(){return tipo;}
     public abstract Boolean contiene(LugarGeografico otro);
     public abstract Boolean puedeContener(LugarGeografico otro);
+    public abstract void removerDestino (LugarGeografico lugar, Boolean override);
 }
