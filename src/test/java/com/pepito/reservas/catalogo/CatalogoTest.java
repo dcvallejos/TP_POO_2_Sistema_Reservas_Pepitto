@@ -45,12 +45,12 @@ class CatalogoTest {
     // Unico lugar donde se crean los objetos: si cambia un constructor, se toca aca.
     private Destino continente(String nombre) {return new Destino(TipoGeografico.CONTINENTE, nombre);}
     private Destino pais(String nombre) {return new Destino(TipoGeografico.PAIS, nombre);}
-    private Ciudad ciudad(String nombre) {return new Ciudad(TipoGeografico.CIUDAD, nombre);}
+    private Ciudad ciudad(String nombre) {return new Ciudad(nombre);}
 
-    private Servicio servicio(String nombre, String codigo, Categoria categoria, Double precio) {
+    private Servicio servicio(String nombre, String descripcion, String codigo, Categoria categoria, Double precio) {
         Disponibilidad d = new Disponibilidad();
-        d.agregarCupoMasivo(periodo, 5);
-        return new Servicio(nombre, 0.0, d, codigo, "PROVEEDOR", categoria, precio, paris);
+        d.agregarCupo(periodo, 5);
+        return new Servicio(nombre,descripcion, 0.0, d, codigo, "PROVEEDOR", categoria, precio, paris);
     }
     @BeforeEach
     void setUp() {
@@ -73,9 +73,9 @@ class CatalogoTest {
 
         catalogo = new Catalogo();
 
-        vuelo = servicio("Vuelo a Aruba", "123VUELO", Categoria.VUELO, 123.0);
-        alojamiento = servicio("Hotel en Aruba", "123HOTEL", Categoria.ALOJAMIENTO, 32.5);
-        auto = servicio("Alquiler de auto", "123AUTO", Categoria.ALQUILER_AUTO, 12.2);
+        vuelo = servicio("Vuelo a Aruba", "Descripción de prueba", "123VUELO", Categoria.VUELO, 123.0);
+        alojamiento = servicio("Hotel en Aruba", "Descripción de prueba", "123HOTEL", Categoria.ALOJAMIENTO, 32.5);
+        auto = servicio("Alquiler de auto", "Descripción de prueba", "123AUTO", Categoria.ALQUILER_AUTO, 12.2);
     }
 
     private void cargarTodos() {
@@ -99,7 +99,7 @@ class CatalogoTest {
 
     @Test
     void catalogo_rechaza_item_invalido() {
-        Servicio invalido = servicio("Invalido", "999INV", Categoria.EXCURSION, 10.0);
+        Servicio invalido = servicio("Invalido", "Descripción de prueba", "999INV", Categoria.EXCURSION, 10.0);
         invalido.agregarAtributo(new AtributoDinamico("Apto Mascotas", true, new TipoBooleano(), 4.5));
 
         assertThrowsExactly(CatalogoException.ErrorItemInvalido.class, () -> catalogo.agregarItem(invalido));
@@ -122,6 +122,33 @@ class CatalogoTest {
         assertFalse(catalogo.contieneItem(auto));
     }
 
+
+    @Test
+    void catalogo_remueve_un_item_existente() {
+        catalogo.agregarItem(vuelo);
+        catalogo.agregarItem(auto);
+
+        catalogo.removerItem(vuelo);
+
+        assertFalse(catalogo.contieneItem(vuelo));
+        assertTrue(catalogo.contieneItem(auto));
+        assertEquals(1, catalogo.cantidadItems());
+    }
+
+    @Test
+    void la_lista_del_catalogo_no_permite_saltear_las_validaciones() {
+        catalogo.agregarItem(vuelo);
+        List<ItemCatalogo> lista = catalogo.getCatalogo();
+
+        try {
+            lista.add(auto);
+        } catch (UnsupportedOperationException esperado) {
+            // una lista inmodificable también cumple
+        }
+
+        assertEquals(List.of(vuelo), catalogo.getCatalogo());
+        assertFalse(catalogo.contieneItem(auto));
+    }
 
     @Test
     void catalogo_remover_item_inexistente_lanza_excepcion() {
@@ -171,9 +198,9 @@ class CatalogoTest {
     @Test
     void buscar_disponibles_por_fecha_excluye_los_items_sin_cupo() {
         cargarTodos();
-        alojamiento.reservar(dia1, 5); // se agota solo el dia1
+        alojamiento.reservar(Periodo.dia(dia1), 5); // se agota solo el dia1
 
-        List<ItemCatalogo> resultado = catalogo.buscarDisponibles(baratos, dia1, 1);
+        List<ItemCatalogo> resultado = catalogo.buscarDisponibles(baratos, Periodo.dia(dia1), 1);
 
         assertEquals(List.of(auto), resultado);
     }
@@ -182,20 +209,20 @@ class CatalogoTest {
     void buscar_disponibles_por_fecha_incluye_a_todos_si_hay_cupo() {
         cargarTodos();
 
-        assertEquals(2, catalogo.buscarDisponibles(baratos, dia2, 5).size());
+        assertEquals(2, catalogo.buscarDisponibles(baratos, Periodo.dia(dia2), 5).size());
     }
 
     @Test
     void buscar_disponibles_por_fecha_respeta_la_cantidad_pedida() {
         cargarTodos();
 
-        assertTrue(catalogo.buscarDisponibles(todos, dia1, 6).isEmpty());
+        assertTrue(catalogo.buscarDisponibles(todos, Periodo.dia(dia1), 6).isEmpty());
     }
 
     @Test
     void buscar_disponibles_por_periodo_excluye_los_items_con_algun_dia_sin_cupo() {
         cargarTodos();
-        auto.reservar(dia2, 5); // se agota solo el dia2
+        auto.reservar(Periodo.dia(dia2), 5); // se agota solo el dia2
 
         List<ItemCatalogo> resultado = catalogo.buscarDisponibles(baratos, periodo, 1);
 
@@ -222,6 +249,6 @@ class CatalogoTest {
 
         catalogo.buscarDisponibles(todos, periodo, 3);
 
-        assertEquals(5, vuelo.disponibilidad().cupo(dia1));
+        assertEquals(5, vuelo.disponibilidad().libres(dia1));
     }
 }
