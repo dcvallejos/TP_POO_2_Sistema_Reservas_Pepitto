@@ -1,6 +1,6 @@
 package com.pepito.reservas.reserva;
 
-import com.pepito.reservas.metodoDePago.ComprobantePago;
+import com.pepito.reservas.documento.ComprobantePago;
 
 import java.time.LocalDateTime;
 
