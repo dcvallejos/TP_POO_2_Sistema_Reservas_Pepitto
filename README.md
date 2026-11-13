@@ -45,8 +45,8 @@ Cada módulo tiene su propio Issue en este repositorio con el enunciado completo
 
 | Instancia | Fecha |
 |-----------|-------|
-| 1.ª fecha | 12 de noviembre, en el horario de práctica |
-| 2.ª fecha | 19 de noviembre de 2026, en el horario de práctica |
+| 1.ª fecha | 19 de noviembre, en el horario de práctica |
+| 2.ª fecha | 3 de Diciembre  de 2026, en el horario de práctica |
 
 Después de cada entrega hay una corrección *off-line* y una entrevista individual y remota con cada integrante. En la entrevista hay que tener el IDE abierto con el TP ejecutable.
 
@@ -119,9 +119,9 @@ C:.
 
 ## Tecnologías
 
-- Lenguaje: Java _(versión a definir)_
-- Build: _(Maven / Gradle, a definir)_
-- Tests: _(JUnit, a definir)_
+- Lenguaje: Java _()_
+- Build: _(Maven )_
+- Tests: _(JUnit, Mockito )_
 - Cobertura: _(JaCoCo u otra, a definir)_
 
 ## Cómo trabajamos
@@ -134,6 +134,9 @@ C:.
 ## Decisiones de diseño
 
 _Se va completando a medida que avanza el diseño._
+2.3 MétodosDeTranslado
+Se seleccionó el patrón de diseño Strategy para modelar la jerarquía de los métodos de traslado (Estándar, VIP y Punto de Encuentro). La decisión se fundamenta en que cada modalidad posee un comportamiento de cálculo de costos y validaciones completamente diferente, además de acoplarse a distintas librerías externas (PlataformaTransporte, TrasladoVIP). Al aplicar Strategy, encapsulamos cada metodo  de translado  en su propia clase, cumpliendo con el Principio de Responsabilidad Única (SRP) y permitiendo que el sistema sea extensible ante la incorporación de nuevos métodos de transporte sin necesidad de modificar el código cliente, respetando así el Principio de Abierto/Cerrado (OCP) y eliminando la necesidad de estructuras condicionales rígidas , como seria  por ej un switch .
+
 
 | Módulo | Decisión | Problema que resuelve | Alternativa descartada |
 |--------|----------|-----------------------|------------------------|
