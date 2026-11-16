@@ -10,6 +10,11 @@ import com.pepito.reservas.reserva.suscriptor.ReservaObserver;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * GeneradorVoucher - ConcreteObserver.
+ * Al pasar a FINALIZADA genera el VoucherReserva y la Factura (con el monto del Cobro) y se los envía al cliente.
+ */
+
 public class GeneradorVoucher implements ReservaObserver {
 
     MailSender mailSender;

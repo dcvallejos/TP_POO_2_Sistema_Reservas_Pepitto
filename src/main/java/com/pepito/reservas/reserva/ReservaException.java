@@ -1,7 +1,9 @@
 package com.pepito.reservas.reserva;
- 
-/*
- * Excepción de dominio base del módulo de reservas.
+
+/**
+ * ReservaException
+ * Base de las excepciones de dominio de la reserva
+ * OperacionInvalidaException informa el estado y la operación rechazada.
  */
 
 public class ReservaException extends RuntimeException {

@@ -4,6 +4,15 @@ import com.pepito.reservas.documento.ComprobanteTransferencia;
 import com.pepito.reservas.documento.ComprobantePago;
 import com.pepito.reservas.metodoDePago.api.ApiTransferencia;
 
+/**
+ * TransferenciaBancaria - ConcreteClass.
+ *  Valida CBU/CVU y alias; reservar fondos no aplica (transferencia directa)
+ *  Genera un ComprobanteTransferencia con el número de operación.
+ *
+ * Decisión:
+ *  El CBU se define como String (22 dígitos).
+ */
+
 public class TransferenciaBancaria extends MetodoDePago{
     private final ApiTransferencia apiTransferencia;
     private final String cbu;

@@ -1,5 +1,10 @@
 package com.pepito.reservas.excepciones;
 
+/**
+ * ServiceExceptions
+ * Errores de creación y uso de servicios y paquetes (descuento o precio fuera de rango, cupo inválido, metodo
+ * inválido). Las subclases son estáticas anidadas para agrupar la familia en un solo archivo.
+ */
 
 public abstract class ServiceExceptions extends RuntimeException {
     protected ServiceExceptions(String message) {

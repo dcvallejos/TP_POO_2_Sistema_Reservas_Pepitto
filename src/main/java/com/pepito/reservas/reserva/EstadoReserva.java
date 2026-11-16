@@ -5,13 +5,24 @@ import com.pepito.reservas.catalogo.servicio.Periodo;
 import com.pepito.reservas.metodoDePago.MetodoDePago;
 import com.pepito.reservas.traslado.MetodoTraslado;
  
-/*
+/**
+ * EstadoReserva
  * State del patrón State. Todas las operaciones se rechazan por default.
- * Cada Estado redefine únicamente las que le son válidas.
- * Los Estados terminales (Finalizada & Cancelada) no redefinen nada.
- * Es público solo para que los observers puedan consultar el nombre; las operaciones son package-private
- * y los Estados concretos no son visibles fuera del paquete: nadie puede forzar una transición.
- */
+ *
+ * Descripción:
+ *  Define el comportamiento de la reserva según la etapa ; cada Estado redefine únicamente las que le son válidas.
+ *  Los Estados terminales (Finalizada & Cancelada) no redefinen nada.
+
+ *
+ * Atributos:
+ *   - nombre:  (NombreEstado) Identificador del estado. Lo consultan los observers.
+ *
+ * Decisiones:
+ *  Es público solo para que los observers puedan consultar el nombre
+ *  Las operaciones son package-private y los Estados concretos no son visibles fuera del paquete: nadie puede forzar
+ *  una transición.
+ *
+ *   */
 public abstract class EstadoReserva {
  
     private final NombreEstado nombre;

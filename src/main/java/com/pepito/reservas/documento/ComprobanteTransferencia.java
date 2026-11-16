@@ -1,5 +1,8 @@
 package com.pepito.reservas.documento;
 
+/** ComprobanteTransferencia - Comprobante con número de operación, CBU y alias. */
+
+
 public class ComprobanteTransferencia extends ComprobantePago {
 
     private final String cbu;

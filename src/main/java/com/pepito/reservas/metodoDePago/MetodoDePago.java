@@ -6,13 +6,40 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * MetodoDePago
+ * Parte AbstractClass del patrón Template Method
+ *
+ * Descripción:
+ *   Define el proceso de pago con pasos prefijados con una única cabecera de acceso (procesarPago):
+ *   validar datos → reservar fondos → ejecutar la transacción → generar el comprobante → notificar el resultado.
+ *   Cada medio de pago se encarga de elegir su implementación.
+ *
+ * Atributos
+ *   - comprobantesRegistrados:  (List<ComprobantePago>) Registro de comprobantes realizados.
+ *
+ * Roles:
+ *   - Template method:          procesarPago (final: ninguna subclase puede alterar el orden).
+ *   - Operaciones primitivas:   validarDatos, reservarFondos, ejecutarTransaccion, generarComprobante (abstractas).
+ *   - Consecuencia:             notificarResultado (por default registra el comprobante. Se puede redefinir para
+ *   cuando no aplica).
+ *
+ * Decisión:
+ *   Se separó generarComprobante de notificarResultado: el comprobante lo genera el dominio a partir del código de
+ *   transacción que devuelve la API, la notificación solo lo comunica.
+ *
+ * Alternativa descartada:
+ *  Strategy de pago: cada medio tenia la posibilidad de implmenetar pasos en cualquier orden o no hacer alguno.
+ */
+
 public  abstract class MetodoDePago {
 
     private final List<ComprobantePago> comprobantesRegistrados;
     public MetodoDePago(){
         this.comprobantesRegistrados = new ArrayList<>(List.of());
     }
-// template method
+
+    // Cuerpo de Template Method
     public final ComprobantePago procesarPago(Double monto  ) { // métodoTemplate
         this.validarDatos();
         this.reservarFondos();

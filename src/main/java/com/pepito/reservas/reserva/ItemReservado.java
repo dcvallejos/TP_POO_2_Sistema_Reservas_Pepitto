@@ -3,10 +3,15 @@ package com.pepito.reservas.reserva;
 import com.pepito.reservas.catalogo.ItemCatalogo;
 import com.pepito.reservas.catalogo.servicio.Periodo;
 
-/*
- * Una línea de la reserva: QUÉ ítem del catálogo y PARA QUÉ fechas.
- * El ítem es uno solo en el catálogo; lo que la reserva compra es "ese ítem en ese período".
- * La cantidad de pasajeros no va acá: es de toda la reserva y vale para todas sus líneas.
+/**
+ * ItemReservado
+ *
+ * Descripción:
+ *  Una línea de la reserva: QUÉ ítem del catálogo y PARA QUÉ fechas.
+ *  El ítem es uno solo en el catálogo; lo que la reserva compra es "ese ítem en ese período".
+ *
+ * Decisión:
+ *  La cantidad de pasajeros no va acá: es de toda la reserva y vale para todas sus líneas.
  */
 
 public class ItemReservado {

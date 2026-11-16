@@ -1,5 +1,9 @@
 package com.pepito.reservas.destino;
 
+/** DestinoException - Errores de composite geográfico: duplicado, incompatible por jerarquía, inexistente o fuera de
+ * rango.
+ * */
+
 public abstract class DestinoException extends RuntimeException {
     public DestinoException(String message) {
         super(message);

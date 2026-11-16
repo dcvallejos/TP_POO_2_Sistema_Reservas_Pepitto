@@ -3,6 +3,26 @@ package com.pepito.reservas.destino;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Destino
+ * Sección Composite del patrón
+ *
+ * Descripcion:
+ *  Lugar que contiene a otros lugares (un continente contiene países, un país contiene ciudades)
+ *
+ * Atributos:
+ *   - destinos:  (List<LugarGeografico>) Lugares contenidos. El constructor guarda una copia de la lista recibida.
+ *
+ * Reglas:
+ *  - agregarDestino rechaza duplicados (error DuplicidadDestino) y lugares de igual o mayor nivel
+ *  (IncompatibilidadDestino)
+ *  - removerDestino quit un hijo directo. Si el lugar esta mas abajo, solo busca en profundiad cuando override es
+ *  true (Define la ViolacionRango). Esto es para facilitar el control de la eliminación de arboles enteros de paises
+ *  . Por defecto override es false.
+ *
+ * */
+
+
 public class Destino extends LugarGeografico {
 
     ArrayList<LugarGeografico> destinos;

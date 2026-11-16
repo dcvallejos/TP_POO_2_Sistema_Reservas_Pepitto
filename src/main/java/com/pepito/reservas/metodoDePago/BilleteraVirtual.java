@@ -5,6 +5,16 @@ import com.pepito.reservas.documento.ComprobantePago;
 import com.pepito.reservas.documento.NotificacionPush;
 import com.pepito.reservas.metodoDePago.api.ApiBilletera;
 
+/**
+ * BilleteraVirtual - ConcreteClass.
+ * Verifica saldo, bloquea el saldo y acredita en tiempo real. Es el único medio que redefine la consecuencia del
+ * proceso.
+ *
+ * Decisión:
+ *  Se implementó el registro del comprobante (super) y el envío de una NotificacionPush por la API, que es la que se
+ *  encargará de generar la notificación en sí.
+ */
+
 public class BilleteraVirtual  extends MetodoDePago{
     private final ApiBilletera apiBilletera;
 

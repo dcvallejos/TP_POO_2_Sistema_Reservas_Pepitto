@@ -9,6 +9,24 @@ import com.pepito.reservas.destino.LugarGeografico;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+* Paquete
+* Seccion Composite del patrón
+*
+* Descripcion:
+*   Paquete se encarga de almacenar los ItemCatalogo que representrían a los servicios individuales o también Paquetes.
+*   Asimismo, respetando el patron, todos los metodos tiene una funcionalidad recursiva, asegurando en
+*       cada recursión la validación de cada paso.
+*
+* Atributos
+*   - Nombre:       (String) Nombre del paquete en cuestion. Ej: "Viaje de aventuras en el Caribe"
+*   - Descripción:  (String) Breve descripcion de que trata el paquete
+*   - Descuento:    (Double) El descuento se inicializa como el porcentaje individual que se carga al total de los
+* servicios.
+*                   Se inicializa con el descuento en cuestion (ej. 35% off, representaria 0.35).
+*   - Destino:      (LugarGeografico) Representa el destino del paquete (sirve como criterio de búsqueda)
+*
+* */
 public class Paquete extends ItemCatalogo implements GestorServicios {
 
     String descripcion;
@@ -20,11 +38,11 @@ public class Paquete extends ItemCatalogo implements GestorServicios {
             Double descuento,
             LugarGeografico destino
     ) {
+        super(nombre, descripcion, descuento, destino);
         if (descuento < 0.0 || descuento > 1.0) {
             throw new ServiceExceptions.ErrorCreacionPaquete(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");
         }
 
-        super(nombre, descripcion, descuento, destino);
         this.descripcion = descripcion;
         this.servicios = new ArrayList<>();
     }

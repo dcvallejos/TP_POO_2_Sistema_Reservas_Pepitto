@@ -1,7 +1,8 @@
 package com.pepito.reservas.documento;
  
-/*
- * Comprobante de crédito/reembolso que se registra en la reserva al cancelar.
+/**
+ * VoucherCredito
+ * Comprobante de crédito/reembolso que se registra en la reserva al cancelar. Guarda monto y motivo.
  */
 public class VoucherCredito extends Documento {
  

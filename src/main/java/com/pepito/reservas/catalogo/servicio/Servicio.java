@@ -9,6 +9,30 @@ import com.pepito.reservas.destino.LugarGeografico;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Servicio
+ * Seccion Leaf del patrón
+ *
+ * Descripcion:
+ *   Servicio representa el nivel concreto de ItemCatalogo. Representría a los servicios individuales.
+ *   Asimismo, respetando el patron, todos los metodos tiene una funcionalidad final, alterando u operando según sus
+ *      propios estados.
+ *
+ * Atributos
+ *   - Nombre:                  (String) Nombre del servicio en cuestion. Ej: "Aereo" "Hotel"
+ *   - Descripción:             (String) Breve descripcion de que trata el servicio
+ *   - PrecioBase:              (Double) Precio sin descuento del servicio.
+ *   - Descuento:               (Double) El descuento se inicializa como el porcentaje individual que se carga al valor
+ *                                  Se inicializa con el descuento en cuestion (ej. 35% off, representaria 0.35).
+ *   - Destino:                 (LugarGeografico) Representa el destino del servicio. Sirve como criterio de búsqueda.
+ *   - Categoria:               (Categoria) Representa la categoria del servicio. Sirve como criterio de busqueda.
+ *   - Disponibildiad           (Disponibilidad) Representa un objeto al que se le delega el cupo y la ocupación de un servicio
+ *                                  en una colección de fechas.
+ *   - AtributosAdicionales     (AtributoDinamico): Lista de atributos adicionales que enriquecen o dan información
+ *                                  adicional del servicio. Declaran tipo, valor y obligatoriedad.
+ *
+ * */
+
 public class Servicio extends ItemCatalogo {
     String codigoReserva;
     String proveedor;
@@ -30,10 +54,10 @@ public class Servicio extends ItemCatalogo {
             LugarGeografico destino
         )
     {
+        super(nombre, descripcion, descuento, destino);
         if (precioBase < 0.0){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "PrecioBase no puede ser negativo");}
         if (descuento < 0.0 || descuento > 1.0 ){throw new ServiceExceptions.ErrorCreacionServicio(nombre, "Descuento puede tener un valor entre 0.0 y 1.0");}
 
-        super(nombre, descripcion, descuento, destino);
         this.codigoReserva = codigoReserva;
         this.proveedor = proveedor;
         this.categoria = categoria;
@@ -125,7 +149,7 @@ public class Servicio extends ItemCatalogo {
                 ||  nombre == null
                 ||  nombre.isBlank()
                 ||  proveedor.isBlank()
-                ||  precioBase == 0.0
+                ||  precioBase < 0.0
         )
         {
             return false;

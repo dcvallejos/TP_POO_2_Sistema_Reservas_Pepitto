@@ -1,5 +1,8 @@
 package com.pepito.reservas.documento;
 
+
+/** NotificacionPush - Mensaje que la billetera virtual envía por su API al registrarse un pago. */
+
 public class NotificacionPush extends Documento{
 
     ComprobantePago comprobantePago;

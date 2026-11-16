@@ -5,6 +5,12 @@ import com.pepito.reservas.reserva.Reserva;
 
 import java.util.List;
 
+/**
+ * VoucherReserva
+ *  Detalle de los servicios reservados. Guarda una copia de los ítems (no la lista viva de la reserva) y no
+ *  tiene monto: la parte fiscal es la Factura.
+ */
+
 public class VoucherReserva extends Documento {
 
     List<ItemReservado> listaItems;

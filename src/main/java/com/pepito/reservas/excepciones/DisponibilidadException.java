@@ -2,6 +2,10 @@ package com.pepito.reservas.excepciones;
 
 import com.pepito.reservas.catalogo.servicio.Periodo;
 
+
+/** DisponibilidadException - Errores de cupos: período sin disponibilidad, cantidad inválida, liberación mayor a lo
+ * reservado. */
+
 public abstract class DisponibilidadException extends ServiceExceptions {
     protected DisponibilidadException(String mensaje) { super(mensaje); }
 

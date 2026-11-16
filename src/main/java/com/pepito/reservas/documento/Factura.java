@@ -2,6 +2,13 @@ package com.pepito.reservas.documento;
 
 import com.pepito.reservas.cliente.Cliente;
 
+/**
+ * Factura
+ *
+ *  Comprobante fiscal emitido al FINALIZAR la reserva. Copia los datos del cliente y toma el monto del Cobro (lo
+ *  efectivamente pagado), no el total actual de la reserva.
+ */
+
 public class Factura extends Documento{
 
     String nombreCliente;

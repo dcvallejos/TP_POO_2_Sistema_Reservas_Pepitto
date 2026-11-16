@@ -14,6 +14,30 @@ import java.util.Map;
  * Libres = capacidad - reservados. Tener ambos números es lo que permite el reporte de ocupación
  *  * Bloquear y liberar son atómicos: primero verifican todo el período y recién después modifican.
  */
+
+/**
+ * Disponibilidad
+ *
+ * Descripción:
+ *  Representa los cupos de un servicio y su disponibilidad cada día de un Periodo. Separa la capacidad (lugares
+ *  maximos habilitados) de las reservas (lo ocupado de esa capacidad)
+ *
+ * Atributos
+ *   - capacidad:   (Map<LocalDate, Integer>) Cupos ofrecidos por fecha. Solo crece con agregarCupo.
+ *   - reservados:  (Map<LocalDate, Integer>) Cupos bloqueados por reservas, por fecha.
+ *
+ * Decisión:
+ *  Separar las nociones de capacidad y reserva hace de que no se pueda liberar mas alla de la capacidad
+ *  originalmente planteada por error, y facilita la lógica de responder por su disponibilidad y la capacidad de
+ *  liberación por separado.
+ *  Si bien el recio es la invarianza (no puede haber mas ocupados que capacidad ni menos capacidad que ocupados)
+ *  permite el bloqueo y liberación polimórfica.
+ *
+ * Alternativa descartada:
+ *  Inicialmente se había planteado un Map de cupos restantes, el problema es que no distinguía oferta de ocupación,
+ *  lo cual podría generar una ampliación accidental de cupos (margenes dinamicos)
+ * */
+
 public class Disponibilidad {
 
     private final Map<LocalDate, Integer> capacidad = new HashMap<>();
@@ -26,7 +50,7 @@ public class Disponibilidad {
         this.agregarCupo(periodo, cupos);
     }
 
-    /* El negocio amplía su oferta: suma capacidad en cada día del período. */
+    /** El negocio amplía su oferta: suma capacidad en cada día del período. */
     public void agregarCupo(Periodo periodo, int cupos) {
         this.validarCantidad(cupos);
         periodo.dias().forEach(fecha -> this.capacidad.merge(fecha, cupos, Integer::sum));
@@ -52,12 +76,12 @@ public class Disponibilidad {
         return periodo.dias().allMatch(fecha -> this.reservados(fecha) >= cantidad);
     }
 
-    /* Hay al menos 'cantidad' cupos libres en TODOS los días del período. */
+    /** Hay al menos 'cantidad' cupos libres en TODOS los días del período. */
     public boolean disponible(Periodo periodo, int cantidad) {
         return periodo.dias().allMatch(fecha -> this.libres(fecha) >= cantidad);
     }
 
-    /* El servicio opera todos los días del período (aunque estén llenos). Detecta huecos, no solo extremos. */
+    /** El servicio opera todos los días del período (aunque estén llenos). Detecta huecos, no solo extremos. */
     public boolean cubre(Periodo periodo) {
         return periodo.dias().allMatch(this.capacidad::containsKey);
     }

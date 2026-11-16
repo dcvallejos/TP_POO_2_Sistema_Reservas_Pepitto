@@ -7,6 +7,11 @@ import com.pepito.reservas.reserva.NombreEstado;
 import com.pepito.reservas.reserva.Reserva;
 import com.pepito.reservas.reserva.suscriptor.ReservaObserver;
 
+/**
+ * Fidelizacion - ConcreteObserver (Club de Viajeros).
+ * Al pasar a CANCELADA envía al cliente un CuponDescuento del 5 %.
+ */
+
 public class Fidelizacion implements ReservaObserver{
 
     MailSender mailSender;

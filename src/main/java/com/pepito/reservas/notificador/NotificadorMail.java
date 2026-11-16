@@ -6,6 +6,11 @@ import com.pepito.reservas.reserva.NombreEstado;
 import com.pepito.reservas.reserva.Reserva;
 import com.pepito.reservas.reserva.suscriptor.ReservaObserver;
 
+/**
+ * NotificadorMail - ConcreteObserver.
+ * Envía un mail al cliente con el nuevo estado. Solo actúa ante CONFIRMADA, EN_CURSO y FINALIZADA.
+ */
+
 public class NotificadorMail implements ReservaObserver {
 
     MailSender mailSender;

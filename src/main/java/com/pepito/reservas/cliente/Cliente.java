@@ -1,5 +1,19 @@
 package com.pepito.reservas.cliente;
 
+/**
+ * Cliente
+ * Titular de una reserva. Guarda los datos que necesitan los documentos y las notificaciones:
+ *
+ * Atributos:
+ *  - nombreCliente:               (String) Nombre del cliente identificatiorio
+ *  - cuitCliente:                 (String) Cuit del cliente.
+ *  - direccionCliente:            (String) Utilizable por el Observer de Documentos en la parte de Factura
+ *  - correoElectronicoCliente:    (String) Utilizable por el Observer de Documentos en la parte de MailSender
+ *
+ * Decision:
+ *  Se decidió  extender esta clase para poder obtener datos del cliente en cuestíón al emitir documentos.
+ */
+
 public class Cliente {
 
 

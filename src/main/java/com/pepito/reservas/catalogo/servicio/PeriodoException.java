@@ -1,5 +1,7 @@
 package com.pepito.reservas.catalogo.servicio;
 
+/** PeriodoException - Período mal formado (fecha desde posterior a fecha hasta). */
+
 public abstract class PeriodoException extends RuntimeException {
     public PeriodoException(String message) {
         super(message);

@@ -5,9 +5,12 @@ import com.pepito.reservas.catalogo.servicio.Periodo;
 import com.pepito.reservas.metodoDePago.MetodoDePago;
 import com.pepito.reservas.traslado.MetodoTraslado;
  
-/*
- * Operaciones que se le pueden pedir a una Reserva.
- * Es el contrato del Contexto (Reserva); NO es el contrato de los estados, que reciben la Reserva como parámetro (en EstadoReserva).
+/**
+ * OperacionesReserva
+ *
+ * Descripción:
+ *  Operaciones que se le pueden pedir a una Reserva.
+ *  Es el contrato del Contexto (Reserva); NO es el contrato de los estados, que reciben la Reserva como parámetro (en EstadoReserva).
  */
 
 public interface OperacionesReserva {

@@ -20,11 +20,35 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-/*
+/**
  * Contexto del Patrón State y Sujeto del Patrón Observer.
- * No decide operaciones válidas, las delega al Estado vigente.
- * Los efectos que ejecutan los Estados (cambiarEstado, cobrar, bloquearCupos, ...) son package-private:
- * desde afuera del paquete la única forma de modificar una Reserva son las operaciones de OperacionesReserva.
+ *
+ * Descripcion:
+ *  Representa el pedido de un cliente: items del catalogo para ciertas fechas, cantidad de pasajeros, traslado
+ *  elegido y pago.
+ *  No decide operaciones válidas, las delega al Estado vigente.
+ *  Los efectos que ejecutan los Estados (cambiarEstado, cobrar, bloquearCupos, ...) son package-private:
+ *  desde afuera del paquete la única forma de modificar una Reserva son las operaciones de OperacionesReserva.
+ *
+ * Atributos:
+ *   - cliente:            (Cliente) Titular de la reserva.
+ *   - cantidadPasajeros:  (int) Cada pasajero ocupa un cupo de cada ítem. Mínimo 1.
+ *   - reloj:              (Clock) Inyectado para fijar fechas en los tests (cobro y reembolsos).
+ *   - items:              (List<ItemReservado>) Líneas de la reserva: ítem + período + precio congelado.
+ *   - vouchers:           (List<VoucherCredito>) Reembolsos generados al cancelar.
+ *   - observadores:       (List<ReservaObserver>) Subsistemas suscriptos (vía RegistroReservas).
+ *   - estado:             (EstadoReserva) Estado vigente.
+ *   - metodoTraslado:     (Optional<MetodoTraslado>) Vacío si no se eligió traslado (sin tasas).
+ *   - cobro:              (Optional<Cobro>) Lo cobrado al confirmar. Vacío antes de confirmar.
+ *
+ *   Decisión:
+ *      Los efectos (cambiarEstado, bloquearCupos, cobrar... etc) son package-private. Esto sirve para que las
+ *      operaciones intrinsecas de la reserva solo puedan ser operables desde fuera del paquete mediante
+ *      OperacionesReserva.
+ *
+ *   Alternativa descartada:
+ *      Se descartaron enums de estado o switch/ifs, dado que según el patrón State, el mismo estado es el que se
+ *      encarga de decidir la forma de ejecución.
  */
 
 public class Reserva implements OperacionesReserva {

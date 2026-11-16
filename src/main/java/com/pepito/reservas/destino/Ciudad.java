@@ -1,5 +1,14 @@
 package com.pepito.reservas.destino;
 
+/**
+ * Ciudad
+ * Sección Leaf del patrón Composite
+ *
+ * Descripción:
+ *   Último nivel geográfico. No contiene a otros lugares: solo se contiene a sí misma.
+ *   El tipo es siempre CIUDAD, por eso no se recibe en el constructor.
+ */
+
 public class Ciudad extends LugarGeografico{
 
 

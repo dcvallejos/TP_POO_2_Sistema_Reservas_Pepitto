@@ -6,6 +6,15 @@ import com.pepito.reservas.metodoDePago.api.ApiTarjetaDeCredito;
 
 import java.time.LocalDate;
 
+/**
+ * TarjetaDeCreditoInternacional - ConcreteClass.
+ * Valida número, CVV y vencimiento mediante una API y genera un VoucherTarjeta.
+ *
+ * Decisión:
+ *  Se cambio el número de tarjeta a String dado que en las pruebas, un numero real de 16 digitos no entraba por la
+ *  limitación de Integer
+ */
+
 public class TarjetaDeCreditoInternacional extends MetodoDePago{
     private final ApiTarjetaDeCredito apiTarjetaDeCredito;
     private final String nroTarjeta ;

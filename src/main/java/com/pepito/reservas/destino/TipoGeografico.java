@@ -1,5 +1,13 @@
 package com.pepito.reservas.destino;
 
+/**
+ * TipoGeografico
+ *
+ * Descripción:
+ *   Nivel jerárquico de un lugar. Cuanto menor el nivel, más abarcativo (CONTINENTE=1 > PAIS=2 > CIUDAD=3).
+ *   mayorQue define qué puede contener a qué, así la regla vive en un único lugar.
+ */
+
 public enum TipoGeografico {
     CONTINENTE(1),
     PAIS(2),

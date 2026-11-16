@@ -1,5 +1,8 @@
 package com.pepito.reservas.catalogo;
 
+/** CatalogoException - Errores de administración del catálogo y de paquetes: ítem existente, inexistente, inválido o
+ *  ciclo. */
+
 public abstract class CatalogoException extends RuntimeException {
     public CatalogoException(String message) {
         super(message);

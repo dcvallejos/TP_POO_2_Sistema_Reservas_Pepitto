@@ -1,5 +1,8 @@
 package com.pepito.reservas.documento;
 
+
+/** VoucherTarjeta - Voucher impreso/digital del pago con tarjeta. */
+
 public class VoucherTarjeta extends ComprobantePago {
 
 
