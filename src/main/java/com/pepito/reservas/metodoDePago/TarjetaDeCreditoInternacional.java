@@ -30,8 +30,8 @@ public class TarjetaDeCreditoInternacional extends MetodoDePago{
     }
 
     @Override
-    protected void validarDatos() {
-        apiTarjetaDeCredito.validar(  nroTarjeta ,  cvv , fechaDeVencimiento) ;
+    protected boolean validarDatos() {
+        return apiTarjetaDeCredito.validar(  nroTarjeta ,  cvv , fechaDeVencimiento) ;
     }
 
     @Override

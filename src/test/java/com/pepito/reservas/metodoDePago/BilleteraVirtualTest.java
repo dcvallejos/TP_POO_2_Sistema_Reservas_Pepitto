@@ -8,6 +8,8 @@ import com.pepito.reservas.documento.NotificacionPush;
 import com.pepito.reservas.metodoDePago.api.ApiBilletera;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.mockito.ArgumentCaptor;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class BilleteraVirtualTest {
         // 1. Creamos los mocks necesarios
         apiBilleteraMock = mock(ApiBilletera.class);
         comprobanteEsperado = mock(ComprobantePago.class);
+        when(apiBilleteraMock.validar()).thenReturn(true);
 
         billeteraVirtual = new BilleteraVirtual(apiBilleteraMock);
     }
@@ -78,6 +81,17 @@ public class BilleteraVirtualTest {
         assertEquals("TX-1", comprobante.getCodigoTransaccion());
         assertEquals(100.0, comprobante.getMonto());
         assertEquals(List.of(comprobante), billeteraVirtual.getComprobantesRegistrados());
+    }
+    
+    @Test
+    public void sinSaldoSuficienteElPagoSeRechazaSinReservarNiEjecutar() {
+        when(apiBilleteraMock.validar()).thenReturn(false);
+
+        assertThrows(PagoRechazadoException.class, () -> billeteraVirtual.procesarPago(100.0));
+
+        verify(apiBilleteraMock, never()).reservar();
+        verify(apiBilleteraMock, never()).ejecutar();
+        assertTrue(billeteraVirtual.getComprobantesRegistrados().isEmpty());
     }
 }
 

@@ -1,15 +1,20 @@
 package com.pepito.reservas.metodoDePago;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import com.pepito.reservas.documento.ComprobantePago;
 import com.pepito.reservas.documento.VoucherTarjeta;
 import com.pepito.reservas.metodoDePago.api.ApiTarjetaDeCredito;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 public class TarjetaDeCreditoInternacionalTest {
 
@@ -21,6 +26,7 @@ public class TarjetaDeCreditoInternacionalTest {
     public void setUp() {
 
         apiMock = mock(ApiTarjetaDeCredito.class);
+        when(apiMock.validar(anyString(), anyInt(), any(LocalDate.class))).thenReturn(true);
 
         LocalDate fechaVencimiento = LocalDate.of(2018, 12, 9);
 
@@ -70,5 +76,16 @@ public class TarjetaDeCreditoInternacionalTest {
         assertInstanceOf(VoucherTarjeta.class, resultado);
 
 
+    }
+    
+    @Test
+    public void conDatosInvalidosElPagoSeRechazaSinReservarNiEjecutar() {
+        when(apiMock.validar(anyString(), anyInt(), any(LocalDate.class))).thenReturn(false);
+
+        assertThrows(PagoRechazadoException.class, () -> tarjetaPago.procesarPago(100.0));
+
+        verify(apiMock, never()).reservar();
+        verify(apiMock, never()).ejecutar();
+        assertTrue(tarjetaPago.getComprobantesRegistrados().isEmpty());
     }
 }
