@@ -27,6 +27,7 @@ import java.util.List;
  * Decisión:
  *   Se separó generarComprobante de notificarResultado: el comprobante lo genera el dominio a partir del código de
  *   transacción que devuelve la API, la notificación solo lo comunica.
+ *   El rechazo se decide en el template: si validarDatos devuelve false se lanza PagoRechazadoException antes de reservar fondos.
  *
  * Alternativa descartada:
  *  Strategy de pago: cada medio tenia la posibilidad de implmenetar pasos en cualquier orden o no hacer alguno.
@@ -41,7 +42,9 @@ public  abstract class MetodoDePago {
 
     // Cuerpo de Template Method
     public final ComprobantePago procesarPago(Double monto  ) { // métodoTemplate
-        this.validarDatos();
+    	if (!this.validarDatos()) {
+            throw new PagoRechazadoException("El medio de pago rechazó los datos: el pago no se procesó.");
+        }
         this.reservarFondos();
         String numeroTransaccion = this.ejecutarTransaccion();
         ComprobantePago comprobantePago = this.generarComprobante(monto, numeroTransaccion);
@@ -49,7 +52,7 @@ public  abstract class MetodoDePago {
         return comprobantePago;
     }
 
-    protected   abstract void validarDatos() ;
+    protected   abstract boolean validarDatos() ;
     protected   abstract void reservarFondos() ;
     protected   abstract String ejecutarTransaccion();
     protected   abstract ComprobantePago generarComprobante(Double monto, String numeroTransaccion) ;

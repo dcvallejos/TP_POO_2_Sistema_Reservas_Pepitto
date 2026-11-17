@@ -6,6 +6,8 @@ import com.pepito.reservas.documento.ComprobantePago;
 import com.pepito.reservas.documento.ComprobanteTransferencia;
 import com.pepito.reservas.metodoDePago.api.ApiTransferencia;
 import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class TransferenciaBancariaTest {
     public void setUp() {
 
         apiTransferenciaMock = mock(ApiTransferencia.class);
+        when(apiTransferenciaMock.validar(CBU_PRUEBA, ALIAS_PRUEBA)).thenReturn(true);
 
         transferenciaBancaria = new TransferenciaBancaria(apiTransferenciaMock, CBU_PRUEBA, ALIAS_PRUEBA);
     }
@@ -92,6 +95,16 @@ public class TransferenciaBancariaTest {
     public void laTransferenciaConoceSuCbuYAlias() {
         assertEquals(CBU_PRUEBA, transferenciaBancaria.getCbu());
         assertEquals(ALIAS_PRUEBA, transferenciaBancaria.getAlias());
+    }
+    
+    @Test
+    public void conCbuOAliasInvalidoElPagoSeRechazaSinEjecutar() {
+        when(apiTransferenciaMock.validar(CBU_PRUEBA, ALIAS_PRUEBA)).thenReturn(false);
+
+        assertThrows(PagoRechazadoException.class, () -> transferenciaBancaria.procesarPago(300.0));
+
+        verify(apiTransferenciaMock, never()).ejecutar();
+        assertTrue(transferenciaBancaria.getComprobantesRegistrados().isEmpty());
     }
 }
 

@@ -26,8 +26,8 @@ public class TransferenciaBancaria extends MetodoDePago{
 
 
     @Override
-    protected void validarDatos() {
-        apiTransferencia.validar(cbu ,alias  );
+    protected boolean validarDatos() {
+        return apiTransferencia.validar(cbu ,alias  );
     }
 
     @Override

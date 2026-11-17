@@ -23,8 +23,8 @@ public class BilleteraVirtual  extends MetodoDePago{
     }
 
     @Override
-    protected  void validarDatos() {
-            apiBilletera.validar();
+    protected boolean validarDatos() {
+        return apiBilletera.validar();
     }
 
     @Override
