@@ -48,6 +48,11 @@ public class Paquete extends ItemCatalogo implements GestorServicios {
     }
 
     @Override
+    public List<Servicio> serviciosHoja() {
+        return servicios.stream().flatMap(item -> item.serviciosHoja().stream()).toList();
+    }
+    
+    @Override
     public Boolean perteneceA(Categoria categoria) {
         return servicios.stream().anyMatch(item -> item.perteneceA(categoria));
     }

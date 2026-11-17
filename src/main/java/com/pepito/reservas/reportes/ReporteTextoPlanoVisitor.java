@@ -1,21 +1,36 @@
 package com.pepito.reservas.reportes;
 
-public class ReporteTextoPlanoVisitor  implements  ReporteVisitor {
+import java.util.Locale;
+
+/**
+ * ReporteTextoPlanoVisitor
+ * Rol ConcreteVisitor del patrón Visitor: presenta cada reporte como texto plano, una línea por fila.
+ */
+
+public class ReporteTextoPlanoVisitor implements ReporteVisitor {
+
     @Override
-    public String visitorServiciosMasReservados(ServicioMasReservado servicio) {
-        return "\"=== REPORTE DE SERVICIOS MÁS RESERVADOS (TEXTO) ===\\n\" +\n" +
-                "  \"1. Excursión Guiada - Ventas: 150 - Precio Promedio: $1200.00\\n\"";
+    public String visitarServiciosMasReservados(ServiciosMasReservados reporte) {
+        StringBuilder texto = new StringBuilder("=== Servicios más reservados ===\n");
+        reporte.getFilas().forEach(fila -> texto.append(String.format(Locale.ROOT,
+                "%s - %d unidades - precio promedio $%.2f\n", fila.nombre(), fila.unidadesVendidas(), fila.precioPromedio())));
+        return texto.toString();
     }
 
     @Override
-    public String visitorOcupacionYCupoDisponible(OcupacionYCupo ocupacion) {
-        return "  \"=== REPORTE DE OCUPACIÓN Y CUPO (TEXTO) ===\\n\" +\n" +
-                " \"Categoría Hotel: Ocupados 80 / Libres 20\\n\";";
+    public String visitarOcupacionYCupo(OcupacionYCupo reporte) {
+        StringBuilder texto = new StringBuilder("=== Ocupación y cupo disponible ===\n");
+        reporte.getFilas().forEach(fila -> texto.append(String.format(Locale.ROOT,
+                "%s - totales %d - reservados %d - libres %d\n",
+                fila.categoria(), fila.cuposTotales(), fila.reservados(), fila.libres())));
+        return texto.toString();
     }
 
     @Override
-    public String visitorExposicionDeProvedor(ExposicionDeProvedor exposicion) {
-        return "\"=== REPORTE DE EXPOSICIÓN DE PROVEEDOR (TEXTO) ===\\n\" +\n" +
-                " \"Operador A: 45% del catálogo\\n\";";
+    public String visitarExposicionPorProveedor(ExposicionPorProveedor reporte) {
+        StringBuilder texto = new StringBuilder("=== Exposición por proveedor ===\n");
+        reporte.getFilas().forEach(fila -> texto.append(String.format(Locale.ROOT,
+                "%s - %d servicios - %.2f%% del catálogo\n", fila.proveedor(), fila.cantidadServicios(), fila.porcentaje())));
+        return texto.toString();
     }
 }

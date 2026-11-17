@@ -11,6 +11,7 @@ import com.pepito.reservas.destino.Destino;
 import com.pepito.reservas.destino.TipoGeografico;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.List;
 
 import java.time.LocalDate;
 
@@ -501,4 +502,18 @@ class PaqueteTest {
     void unPaqueteVacioNoPerteneceANingunaCategoria() {
         assertFalse(paquete_aruba.perteneceA(Categoria.ALOJAMIENTO));
     }
+    
+    @Test
+    void paquete_devuelve_los_servicios_hoja_de_todos_sus_niveles() {
+        Paquete interno = new Paquete("Pack interno", "vuelo y hotel", 0.1, roma);
+        interno.agregarItem(servicio_vuelo);
+        interno.agregarItem(servicio_alojamiento);
+        Paquete externo = new Paquete("Pack externo", "pack y auto", 0.1, roma);
+        externo.agregarItem(interno);
+        externo.agregarItem(servicio_auto);
+
+        assertEquals(List.of(servicio_vuelo, servicio_alojamiento, servicio_auto), externo.serviciosHoja());
+        
+    }
+    
 }
