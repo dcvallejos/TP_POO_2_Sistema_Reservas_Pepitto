@@ -134,9 +134,9 @@ class ServicioTest {
     }
 
     @Test
-    void servicio_posee_atributo_fijo_precioBase_invalido() {
+    void servicio_con_precioBase_cero_es_valido() {
 
-        Servicio servicio_excursion_invalid = new Servicio(
+        Servicio servicio_excursion_gratuita = new Servicio(
                 "Excursion a tumbas de Sazagrev Falso",
                 "Descripción de prueba",
                 0.2,
@@ -147,7 +147,7 @@ class ServicioTest {
                 0.0, paris
         );
 
-        assertFalse(servicio_excursion_invalid.validate());
+        assertTrue(servicio_excursion_gratuita.validate());
     }
 
     @Test
