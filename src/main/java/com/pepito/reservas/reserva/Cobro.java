@@ -12,9 +12,10 @@ import java.time.LocalDateTime;
  *  fecha.
  *
  * Atributos
- *  - item:     (ItemCatalogo) Servicio o paquete reservado.
- *  - periodo:  (Periodo) Fechas de uso.
- *  - precio:   (double) Precio final del ítem al momento de agregarlo.
+ *  - montoServicios: (double) Total de servicios cobrado: precios congelados × pasajeros.
+ *  - montoTasas:     (double) Costo del traslado elegido al confirmar (0 si no hubo traslado).
+ *  - comprobante:    (ComprobantePago) Comprobante que devolvió el medio de pago.
+ *  - fecha:          (LocalDateTime) Momento del cobro, tomado del reloj de la Reserva.
  *
  * Decision:
  *  Los reembolsos, la factura y los reportes usan esto y no los precios actuales del catálogo. Esto es para que
