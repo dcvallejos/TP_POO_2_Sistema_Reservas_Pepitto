@@ -4,6 +4,8 @@ import com.pepito.reservas.catalogo.servicio.Periodo;
 import com.pepito.reservas.catalogo.servicio.Validador;
 import com.pepito.reservas.destino.LugarGeografico;
 import com.pepito.reservas.catalogo.servicio.Categoria;
+import java.util.List;
+import com.pepito.reservas.catalogo.servicio.Servicio;
 
 /**
  *ItemCatalogo
@@ -63,6 +65,10 @@ public abstract class ItemCatalogo implements Validador {
     public abstract boolean liberable(Periodo fechas, Integer cantidad);
     public abstract Boolean perteneceA(Categoria categoria);
     public abstract Boolean cubre(Periodo periodo);
+    
+    /** Los servicios individuales que componen este ítem: un Servicio se devuelve a sí mismo, un Paquete junta los de
+     * sus hijos. Lo usan los reportes para contar cupos y proveedores sin contar dos veces ni preguntar el tipo. */
+    public abstract List<Servicio> serviciosHoja();
 
 
     /** Retorna si el item es el mismo que se consulta o si está en alguno de sus descendientes. Se utiliza para

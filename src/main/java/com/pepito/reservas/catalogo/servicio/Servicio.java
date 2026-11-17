@@ -69,6 +69,19 @@ public class Servicio extends ItemCatalogo {
     public Disponibilidad disponibilidad() {
         return disponibilidad;
     }
+    
+    @Override
+    public List<Servicio> serviciosHoja() {
+        return List.of(this);
+    }
+
+    public String getProveedor() {
+        return proveedor;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
 
     @Override
     public Boolean perteneceA(Categoria categoria) {

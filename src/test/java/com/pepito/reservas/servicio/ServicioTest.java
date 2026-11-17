@@ -12,6 +12,7 @@ import com.pepito.reservas.destino.Destino;
 import com.pepito.reservas.destino.TipoGeografico;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.List;
 
 import java.time.LocalDate;
 
@@ -510,6 +511,23 @@ class ServicioTest {
 
         assertTrue(hotel.perteneceA(Categoria.ALOJAMIENTO));
         assertFalse(hotel.perteneceA(Categoria.VUELO));
+    }
+    
+    @Test
+    void servicio_conoce_su_proveedor_y_su_categoria() {
+        Servicio excursion = new Servicio("Excursion", "Descripción de prueba", 0.2, new Disponibilidad(),
+                "321TEMPLO", "UNWISE GUY TRAVEL AGENCY", Categoria.EXCURSION, 100.0, paris);
+
+        assertEquals("UNWISE GUY TRAVEL AGENCY", excursion.getProveedor());
+        assertEquals(Categoria.EXCURSION, excursion.getCategoria());
+    }
+
+    @Test
+    void servicio_es_su_unico_servicio_hoja() {
+        Servicio excursion = new Servicio("Excursion", "Descripción de prueba", 0.2, new Disponibilidad(),
+                "321TEMPLO", "UNWISE GUY TRAVEL AGENCY", Categoria.EXCURSION, 100.0, paris);
+
+        assertEquals(List.of(excursion), excursion.serviciosHoja());
     }
 
 }

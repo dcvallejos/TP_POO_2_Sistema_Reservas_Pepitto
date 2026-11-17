@@ -50,7 +50,7 @@ public class ItemReservado {
         this.item.liberar(this.periodo, cantidadPasajeros);
     }
 
-    double precioFinal() {
+    public double precioFinal() {
         return this.precio;
     }
 }
