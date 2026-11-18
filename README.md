@@ -1,14 +1,14 @@
 # UNQ-Travel — Sistema de Reservas
 
-Trabajo Práctico Integrador de Programación Orientada a Objetos.
+Trabajo Práctico Integrador de Programación Orientada a Objetos II (UNQ).
 
 Diseño e implementación en **Java** de la **capa de dominio** de un sistema de reservas para una empresa de viajes y turismo online: catálogo de servicios y paquetes, reservas, traslados y tasas, pagos, notificaciones, búsqueda y reportes.
 
-> **Estado del proyecto:** en etapa de diseño. Todavía no hay código.
+> **Estado del proyecto:** todos los módulos implementados (2.1 a 2.6 y 2.8). **374 tests, 0 fallos** y **98,9 % de cobertura de líneas** (mínimo exigido: 95 %).
 
 ## Alcance
 
-El trabajo consiste en diseñar e implementar **únicamente la capa de dominio**: sin interfaz gráfica, sin persistencia y sin frameworks. Solo clases, interfaces y pruebas.
+El trabajo consiste en diseñar e implementar **únicamente la capa de dominio**: sin interfaz gráfica, sin persistencia y sin frameworks. Solo clases, interfaces y pruebas. Las APIs externas (medios de pago, transporte, guías, envío de mails) se definen como interfaces y en los tests se reemplazan con mocks de Mockito.
 
 El objetivo no es construir una aplicación completa, sino demostrar la correcta aplicación de los principios de diseño orientado a objetos en un dominio realista. Cada decisión de diseño debe poder justificarse en términos de qué problema resuelve y qué alternativa más frágil evita.
 
@@ -16,127 +16,97 @@ El objetivo no es construir una aplicación completa, sino demostrar la correcta
 
 | Nombre y apellido | Email | Usuario de GitHub |
 |-------------------|-------|-------------------|
-| _Dominguez, Tomás_       | _tomaselias.dw@gmail.com_ | _TomasDominguez10_ |
-| _Rossi, Tobías_       | _trossi2001@gmail.com_ | _TobiasRossi_ |
-| _Vallejos, Daniel_       | _davallejos_ps@outlook.com_ | _dcvallejos_ |
+| Dominguez, Tomás | tomaselias.dw@gmail.com | TomasDominguez10 |
+| Rossi, Tobías | trossi2001@gmail.com | TobiasRossi |
+| Vallejos, Daniel | davallejos_ps@outlook.com | dcvallejos |
 
-## Módulos del dominio
+## Documentación
 
-Cada módulo tiene su propio Issue en este repositorio con el enunciado completo.
+- **Informe** (integrantes, decisiones de diseño, detalles de implementación, patrones y roles según Gamma et al.): [`docs/Informe_UNQ-Travel.pdf`](docs/Informe_UNQ-Travel.pdf)
+- **Diagrama de clases UML**: [`docs/UML_UNQ-Travel.png`](docs/UML_UNQ-Travel.png)
 
-| Módulo | Descripción |
-|--------|-------------|
-| 2.1 Catálogo de servicios y paquetes | Servicios individuales y paquetes (que pueden contener otros paquetes), con atributos dinámicos y validación. |
-| 2.2 Ciclo de vida de la reserva | Estados de la reserva, operaciones válidas por estado y excepción de dominio propia. |
-| 2.3 Métodos de traslado y tasas | Traslado estándar, VIP / Chauffeur y punto de encuentro. |
-| 2.4 Métodos de pago | Proceso de pago de pasos fijos con variantes por medio de pago (tarjeta, transferencia, billetera/crypto). |
-| 2.5 Notificaciones de la reserva | Subsistemas que reaccionan a los cambios de estado sin que el módulo de reservas los conozca. |
-| 2.6 Búsqueda en el catálogo | Criterios simples combinables con AND, OR y NOT, anidables. |
-| 2.8 Reportes | Reportes exportables en texto plano, CSV y HTML. |
+## Módulos y patrones
+
+| Módulo | Paquete | Patrón | Roles (Gamma et al.) |
+|--------|---------|--------|----------------------|
+| 2.1 Catálogo de servicios y paquetes | `catalogo`, `catalogo.servicio` | Composite | Component `ItemCatalogo` · Leaf `Servicio` · Composite `Paquete` |
+| 2.1 Atributos dinámicos | `catalogo.servicio.atributos` | Strategy | Strategy `TipoDinamico` · ConcreteStrategy `TipoTexto`, `TipoNumerico`, `TipoBooleano`, `TipoFecha` · Context `AtributoDinamico` |
+| 2.1 Destinos geográficos | `destino` | Composite | Component `LugarGeografico` · Composite `Destino` · Leaf `Ciudad` |
+| 2.2 Ciclo de vida de la reserva | `reserva` | State | Context `Reserva` · State `EstadoReserva` · ConcreteState `SolicitudPendiente`, `Confirmada`, `EnCheckIn`, `EnCurso`, `Finalizada`, `Cancelada` |
+| 2.3 Métodos de traslado y tasas | `traslado` | Strategy (y Adapter de las librerías externas) | Strategy `MetodoTraslado` · ConcreteStrategy `MetodoTrasladoEstandar`, `MetodoTrasladoVip`, `MetodoPuntoDeEncuentro` · Context `Reserva` |
+| 2.4 Métodos de pago | `metodoDePago`, `metodoDePago.api` | Template Method | AbstractClass `MetodoDePago` · Template method `procesarPago` · ConcreteClass `TarjetaDeCreditoInternacional`, `TransferenciaBancaria`, `BilleteraVirtual` |
+| 2.5 Notificaciones de la reserva | `notificador`, `reserva.suscriptor` | Observer | Subject `Reserva` · Observer `ReservaObserver` · ConcreteObserver `NotificadorMail`, `GeneradorVoucher`, `Fidelizacion` |
+| 2.6 Búsqueda en el catálogo | `catalogo.busqueda` | Composite | Component `CriterioBusqueda` · Leaf `PorNombre`, `PorPrecioMaximo`, `PorCategoria`, `PorDisponibilidad` · Composite `CriterioAnd`, `CriterioOr`, `CriterioNot` · Client `Catalogo` |
+| 2.8 Reportes | `reportes` | Visitor | Visitor `ReporteVisitor` · ConcreteVisitor `ReporteTextoPlanoVisitor`, `ReporteCSVVisitor`, `ReporteHtmlVisitor` · Element `ReporteElemento` · ConcreteElement `ServiciosMasReservados`, `OcupacionYCupo`, `ExposicionPorProveedor` |
+
+Las decisiones de diseño de cada módulo, con el problema que resuelven y la alternativa que evitan, están en el informe.
+
+## Estructura del repositorio
+
+```
+.
+├── pom.xml
+├── README.md
+├── docs/                          Informe y diagrama UML
+└── src/
+    ├── main/java/com/pepito/reservas/
+    │   ├── catalogo/              Catálogo e ItemCatalogo (2.1)
+    │   │   ├── busqueda/          Criterios de búsqueda (2.6)
+    │   │   └── servicio/          Servicio, Paquete, Disponibilidad, Periodo (2.1)
+    │   │       └── atributos/     Atributos dinámicos (2.1)
+    │   ├── cliente/               Cliente
+    │   ├── destino/               Destinos geográficos (2.1)
+    │   ├── documento/             Comprobantes, vouchers, factura y cupón
+    │   ├── excepciones/           Excepciones de dominio del catálogo
+    │   ├── metodoDePago/          Medios de pago (2.4)
+    │   │   └── api/               Interfaces de las APIs de pago
+    │   ├── notificador/           Subsistemas que observan la reserva (2.5)
+    │   ├── reportes/              Reportes y formatos de exportación (2.8)
+    │   ├── reserva/               Reserva, estados, cobro y registro (2.2)
+    │   │   └── suscriptor/        ReservaObserver (2.5)
+    │   └── traslado/              Métodos de traslado (2.3)
+    └── test/java/com/pepito/reservas/   Tests de unidad, organizados por módulo
+```
+
+## Tecnologías
+
+- Lenguaje: Java 26
+- Build: Maven
+- Tests: JUnit Jupiter 6.0.1 y Mockito 5.20.0
+- Cobertura: JaCoCo 0.8.15, con un mínimo de 95 % de líneas que hace fallar el build si no se alcanza
+
+## Cómo ejecutarlo
+
+Desde la raíz del repositorio:
+
+```bash
+mvn test      # corre los tests
+mvn verify    # corre los tests y controla la cobertura mínima del 95 %
+```
+
+El reporte de cobertura queda en `target/site/jacoco/index.html`.
+
+Desde un IDE, se importa como proyecto Maven (Eclipse: *File → Import → Existing Maven Projects*; IntelliJ: abrir el `pom.xml`) y se corren los tests con *Run As → Maven test* o desde la carpeta `src/test/java`.
 
 ## Entregables
 
-- [ ] Diagrama de clases UML de la solución completa.
-- [ ] Documentación en PDF con integrantes y emails, decisiones de diseño, detalles de implementación, patrones utilizados y sus roles según Gamma et al.
-- [ ] Implementación completa en Java con tests de unidad y **95 % de cobertura** del código de dominio.
-- [ ] Repositorio accesible para los docentes, con historial de trabajo equitativo entre integrantes.
+- [ ] Diagrama de clases UML de la solución completa (`docs/`).
+- [x] Documentación en PDF con integrantes y emails, decisiones de diseño, detalles de implementación, patrones utilizados y sus roles según Gamma et al. (`docs/`).
+- [x] Implementación completa en Java con tests de unidad y **95 % de cobertura** del código de dominio (98,9 %).
+- [x] Repositorio accesible para los docentes, con historial de trabajo de todos los integrantes.
 
 ## Fechas de entrega
 
 | Instancia | Fecha |
 |-----------|-------|
-| 1.ª fecha | 19 de noviembre, en el horario de práctica |
-| 2.ª fecha | 3 de Diciembre  de 2026, en el horario de práctica |
-
-Después de cada entrega hay una corrección *off-line* y una entrevista individual y remota con cada integrante. En la entrevista hay que tener el IDE abierto con el TP ejecutable.
-
-## Estructura del repositorio
-
-_A definir cuando se cree el proyecto._ Propuesta inicial:
-
-```
-.
-C:.
-│   pom.xml
-│   README.md
-│
-├───.mvn
-└───src
-    ├───main
-    │   ├───java
-    │   │   └───com
-    │   │       └───pepito
-    │   │           └───reservas
-    │   │               │   Main.java
-    │   │               │
-    │   │               ├───catalogo
-    │   │               │   │   Catalogo.java
-    │   │               │   │   ItemCatalogo.java
-    │   │               │   │
-    │   │               │   └───busqueda
-    │   │               │           CriterioBusqueda.java
-    │   │               │
-    │   │               ├───cliente
-    │   │               │       Cliente.java
-    │   │               │
-    │   │               ├───notificador
-    │   │               ├───metodoDePago
-    │   │               ├───reporte
-    │   │               ├───reserva
-    │   │               │   │   Reserva.java                 (Context del State, Subject del Observer)
-    │   │               │   │   OperacionesReserva.java
-    │   │               │   │   RegistroReservas.java
-    │   │               │   │   Cobro.java
-    │   │               │   │   VoucherCredito.java
-    │   │               │   │   EstadoReserva.java           (State; los estados concretos van en el
-    │   │               │   │   SolicitudPendiente.java       mismo paquete para que sus operaciones
-    │   │               │   │   Confirmada.java               sean package-private)
-    │   │               │   │   EnCheckIn.java
-    │   │               │   │   EnCurso.java
-    │   │               │   │   Finalizada.java
-    │   │               │   │   Cancelada.java
-    │   │               │   │   NombreEstado.java
-    │   │               │   │   ReservaException.java        (+ OperacionInvalida, ReservaVacia,
-    │   │               │   │                                   ItemInvalido, ItemNoIncluido,
-    │   │               │   │                                   CantidadPasajerosInvalida)
-    │   │               │   │
-    │   │               │   └───suscriptor
-    │   │               │           ReservaObserver.java
-    │   │               │
-    │   │               ├───servicio
-    │   │               │       GestorServicios.java
-    │   │               │       Paquete.java
-    │   │               │       Servicio.java
-    │   │               │       Validador.java
-    │   │               │
-    │   │               └───traslado
-    │   │                       MetodoTraslado.java
-    │   │
-    │   └───resources
-    └───test
-        └───java
-```
-
-## Tecnologías
-
-- Lenguaje: Java _()_
-- Build: _(Maven )_
-- Tests: _(JUnit, Mockito )_
-- Cobertura: _(JaCoCo u otra, a definir)_
+| 1.ª fecha de entrega | 17 de noviembre de 2026 |
+| 1.ª fecha de defensa | 19 de noviembre de 2026 |
+| 2.ª fecha de entrega | 1 de diciembre de 2026 |
+| 2.ª fecha de defensa | 3 de diciembre de 2026 |
 
 ## Cómo trabajamos
 
 - Un Issue por módulo del dominio; el trabajo se organiza a partir de ellos.
 - Cada cambio se hace en una rama propia y se integra con Pull Request.
 - Todos los integrantes commitean con su propio usuario: la participación se evalúa por el historial de git.
-- Las decisiones de diseño importantes se anotan en `docs/` (qué problema resuelve y qué alternativa se descartó), porque hay que justificarlas en la entrevista.
-
-## Decisiones de diseño
-
-_Se va completando a medida que avanza el diseño._
-2.3 MétodosDeTranslado
-Se seleccionó el patrón de diseño Strategy para modelar la jerarquía de los métodos de traslado (Estándar, VIP y Punto de Encuentro). La decisión se fundamenta en que cada modalidad posee un comportamiento de cálculo de costos y validaciones completamente diferente, además de acoplarse a distintas librerías externas (PlataformaTransporte, TrasladoVIP). Al aplicar Strategy, encapsulamos cada metodo  de translado  en su propia clase, cumpliendo con el Principio de Responsabilidad Única (SRP) y permitiendo que el sistema sea extensible ante la incorporación de nuevos métodos de transporte sin necesidad de modificar el código cliente, respetando así el Principio de Abierto/Cerrado (OCP) y eliminando la necesidad de estructuras condicionales rígidas , como seria  por ej un switch .
-
-
-| Módulo | Decisión | Problema que resuelve | Alternativa descartada |
-|--------|----------|-----------------------|------------------------|
+- Las decisiones de diseño se documentan en el informe (`docs/`), con el problema que resuelven y la alternativa que se descartó, porque hay que justificarlas en la entrevista.
