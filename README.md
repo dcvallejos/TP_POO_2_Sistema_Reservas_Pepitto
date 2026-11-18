@@ -23,7 +23,7 @@ El objetivo no es construir una aplicación completa, sino demostrar la correcta
 ## Documentación
 
 - **Informe** (integrantes, decisiones de diseño, detalles de implementación, patrones y roles según Gamma et al.): [`docs/Informe_UNQ-Travel.pdf`](docs/Informe_UNQ-Travel.pdf)
-- **Diagrama de clases UML**: [`docs/UML_UNQ-Travel.png`](docs/UML_UNQ-Travel.png)
+- **Diagrama de clases UML**: [`docs/UML_UNQ-Travel.pdf`](docs/UML_UNQ-Travel.pdf)
 
 ## Módulos y patrones
 
