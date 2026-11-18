@@ -90,7 +90,7 @@ Desde un IDE, se importa como proyecto Maven (Eclipse: *File → Import → Exis
 
 ## Entregables
 
-- [ ] Diagrama de clases UML de la solución completa (`docs/`).
+- [x] Diagrama de clases UML de la solución completa (`docs/`).
 - [x] Documentación en PDF con integrantes y emails, decisiones de diseño, detalles de implementación, patrones utilizados y sus roles según Gamma et al. (`docs/`).
 - [x] Implementación completa en Java con tests de unidad y **95 % de cobertura** del código de dominio (98,9 %).
 - [x] Repositorio accesible para los docentes, con historial de trabajo de todos los integrantes.
